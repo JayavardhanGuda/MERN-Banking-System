@@ -10,6 +10,7 @@ import ResetPassword from './Pages/ResetPassword'
 import Login from './Pages/Login'
 import AdminDashboard from './Pages/AdminDashboard'
 import UserDashboard from './Pages/UserDashboard'
+import InternetBankingRegister from './Pages/InternetBankingRegister'
  
  
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />}/>
         <Route path="/reset-password" element={<ResetPassword />}/>
         <Route path="/register" element={<Register />}/>
+        <Route path="/internet-banking-register" element={<InternetBankingRegister />}/>
       </Routes>
     </BrowserRouter>
     </>

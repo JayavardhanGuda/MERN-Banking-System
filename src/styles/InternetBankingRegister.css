@@ -1,0 +1,406 @@
+/* Internet Banking Registration Page Styles */
+.internet-banking-page {
+  min-height: calc(100vh - 200px);
+  background: linear-gradient(135deg, var(--bg-light) 0%, #c3cfe2 100%);
+  padding: 40px 20px;
+}
+
+.internet-banking-container {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.internet-banking-header {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+  color: white;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.banking-icon-header {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.banking-badge {
+  font-size: 40px;
+  color: white;
+}
+
+.internet-banking-header h2 {
+  margin: 0 0 10px 0;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.internet-banking-header p {
+  margin: 0;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.internet-banking-form-wrapper {
+  padding: 40px 30px;
+}
+
+.internet-banking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Alert Styles */
+.alert {
+  padding: 15px 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.alert-error {
+  background-color: #fee;
+  color: #c33;
+  border-left: 4px solid #c33;
+}
+
+.alert-success {
+  background-color: #efe;
+  color: #3c3;
+  border-left: 4px solid #3c3;
+}
+
+.alert-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* Form Section Styles */
+.form-section {
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+}
+
+.section-title {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-description {
+  margin: 0 0 15px 0;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Form Group Styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  color: var(--primary-light);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.form-input.error {
+  border-color: #c33;
+  background-color: #fee;
+}
+
+.form-input.disabled {
+  background-color: #f5f5f5;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  background: none;
+  border: none;
+  color: var(--primary-light);
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+  color: var(--primary-dark);
+}
+
+.error-message {
+  display: block;
+  color: #c33;
+  font-size: 12px;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.help-text {
+  display: block;
+  color: #999;
+  font-size: 12px;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+/* Security Info Styles */
+.security-info {
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.05) 0%, rgba(13, 110, 253, 0.02) 100%);
+  border: 1px solid rgba(13, 110, 253, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  gap: 15px;
+}
+
+.security-icon {
+  color: var(--primary-light);
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.security-info h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.security-info ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.security-info li {
+  margin-bottom: 6px;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  text-align: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(13, 110, 253, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+  background-color: #e8e8e8;
+  color: #000;
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .internet-banking-page {
+    padding: 20px 10px;
+  }
+
+  .internet-banking-container {
+    border-radius: 8px;
+  }
+
+  .internet-banking-header {
+    padding: 30px 20px;
+  }
+
+  .internet-banking-header h2 {
+    font-size: 24px;
+  }
+
+  .internet-banking-form-wrapper {
+    padding: 25px 20px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .internet-banking-header {
+    padding: 25px 15px;
+  }
+
+  .banking-icon-header {
+    width: 70px;
+    height: 70px;
+  }
+
+  .banking-badge {
+    font-size: 32px;
+  }
+
+  .internet-banking-header h2 {
+    font-size: 20px;
+  }
+
+  .internet-banking-header p {
+    font-size: 14px;
+  }
+
+  .internet-banking-form-wrapper {
+    padding: 20px 15px;
+  }
+
+  .section-title {
+    font-size: 15px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-input {
+    padding: 10px 12px 10px 40px;
+    font-size: 13px;
+  }
+
+  .input-icon {
+    left: 12px;
+    font-size: 14px;
+  }
+
+  .toggle-password {
+    right: 12px;
+    font-size: 14px;
+  }
+
+  .security-info {
+    padding: 15px;
+  }
+
+  .security-icon {
+    font-size: 20px;
+  }
+
+  .security-info h4 {
+    font-size: 13px;
+  }
+
+  .security-info ul {
+    font-size: 12px;
+  }
+
+  .btn {
+    padding: 10px 15px;
+    font-size: 12px;
+  }
+}

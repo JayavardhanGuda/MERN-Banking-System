@@ -128,6 +128,7 @@ export default function Register() {
         gender: formData.gender,
         accountType: formData.accountType,
         initialDeposit: formData.initialDeposit,
+        balance: parseFloat(formData.initialDeposit).toFixed(2),
         currency: formData.currency,
         address: formData.address.trim(),
         city: formData.city.trim(),

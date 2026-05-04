@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import Breadcrumbs from '../Components/Breadcrumbs'
+import MoneyTransfer from './MoneyTransfer'
+import { isInternetBankingEnabled } from '../internetBankingUtils'
 import '../styles/Dashboard.css'
 
 export default function UserDashboard() {
@@ -30,7 +32,7 @@ export default function UserDashboard() {
             <div className="dashboard-card-grid">
               <div className="dashboard-card">
                 <h3>Available Balance</h3>
-                <p>₹1,24,580.75</p>
+                <p>₹{currentUser && currentUser.balance ? parseFloat(currentUser.balance).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00'}</p>
               </div>
               <div className="dashboard-card">
                 <h3>Monthly Spending</h3>
@@ -45,22 +47,7 @@ export default function UserDashboard() {
           </>
         )
       case 'transfer':
-        return (
-          <>
-            <div className="transfer-options">
-              {transferMethods.map((method) => (
-                <button
-                  key={method}
-                  className="transfer-button"
-                  type="button"
-                >
-                  {method}
-                </button>
-              ))}
-            </div>
-            <p className="dashboard-text">Choose your transfer mode to move funds securely and instantly.</p>
-          </>
-        )
+        return <MoneyTransfer />
       case 'statement':
         return (
           <>
