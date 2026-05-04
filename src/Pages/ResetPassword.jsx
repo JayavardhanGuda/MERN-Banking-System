@@ -33,7 +33,35 @@ export default function ResetPassword() {
       setMessage('Passwords do not match.');
       return;
     }
-    console.log('Password reset for:', userId, formData.password);
+    const storedAccounts = JSON.parse(localStorage.getItem('bankAccounts') || '[]');
+    const accountIndex = storedAccounts.findIndex((account) =>
+      account.accountNumber === userId ||
+      account.username?.toLowerCase() === userId?.toLowerCase() ||
+      account.email?.toLowerCase() === userId?.toLowerCase()
+    );
+
+    if (accountIndex === -1) {
+      setMessage('No matching account found. Please go back and enter the correct User ID.');
+      return;
+    }
+
+    storedAccounts[accountIndex].password = formData.password;
+    localStorage.setItem('bankAccounts', JSON.stringify(storedAccounts));
+
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (currentUser) {
+      const matchesCurrentUser =
+        currentUser.accountNumber === storedAccounts[accountIndex].accountNumber ||
+        currentUser.username?.toLowerCase() === storedAccounts[accountIndex].username?.toLowerCase() ||
+        currentUser.email?.toLowerCase() === storedAccounts[accountIndex].email?.toLowerCase();
+      if (matchesCurrentUser) {
+        localStorage.setItem('currentUser', JSON.stringify({
+          ...currentUser,
+          password: formData.password
+        }));
+      }
+    }
+
     setMessage('Password updated successfully. Redirecting to login...');
     setTimeout(() => navigate('/login'), 1200);
   };
