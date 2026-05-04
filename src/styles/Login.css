@@ -1,0 +1,337 @@
+/* Login Page Styles */
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-light) 0%, #c3cfe2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+}
+
+.login-container {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  max-width: 450px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.login-header {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+  color: var(--white);
+  padding: var(--spacing-2xl) 25px;
+  text-align: center;
+}
+
+.bank-logo h2 {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.bank-logo p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.9rem;
+}
+
+.security-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-md);
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.login-form-container {
+  padding: var(--spacing-2xl) 25px;
+}
+
+.login-form-container h3 {
+  margin: 0 0 var(--spacing-xs) 0;
+  color: var(--primary-dark);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.login-form-container > p {
+  margin: 0 0 var(--spacing-2xl) 0;
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding-left: 14px;
+  background-color: #fff;
+}
+
+.input-icon {
+  font-size: 16px;
+  color: var(--accent);
+  margin-right: 12px;
+}
+
+.input-group input {
+  border: none;
+  outline: none;
+  padding: 12px 0;
+  font-size: 0.95rem;
+  width: 100%;
+}
+.input-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.1);
+}
+
+.input-group input {
+  border: none;           /* ✅ REQUIRED */
+  outline: none;
+  padding: 12px 0;
+  font-size: 0.95rem;
+  width: 100%;
+  background: transparent;
+}
+
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.9rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  position: relative;
+  transition: all var(--transition-base);
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+  content: '✓';
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  color: var(--white);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.forgot-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color var(--transition-base);
+}
+
+.forgot-link:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+.login-btn {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: var(--white);
+  border: none;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin-top: 10px;
+}
+
+.login-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-footer {
+  margin-top: var(--spacing-2xl);
+  text-align: center;
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid #f0f0f0;
+}
+
+.login-footer p {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.register-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-base);
+}
+
+.register-link:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+.security-notice {
+  background-color: var(--bg-lighter);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--accent);
+}
+
+.security-notice small {
+  color: var(--text-light);
+  line-height: 1.4;
+}
+
+.login-features {
+  background-color: var(--bg-lighter);
+  padding: var(--spacing-lg) 25px;
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid var(--border-light);
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--text-light);
+  font-size: 0.8rem;
+}
+
+.feature-item svg {
+  font-size: 1.2rem;
+  color: var(--accent);
+}
+
+.forgot-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-light) 0%, #c3cfe2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+}
+
+.forgot-container {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  max-width: 520px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.forgot-header {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+  color: var(--white);
+  padding: var(--spacing-2xl) 25px;
+  text-align: center;
+}
+
+.forgot-header h2 {
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.forgot-header p {
+  margin: 0;
+  color: rgba(255,255,255,0.9);
+}
+
+.forgot-form-container {
+  padding: var(--spacing-2xl) 25px;
+}
+
+.forgot-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.otp-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.otp-btn {
+  background: var(--white);
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.otp-btn:hover {
+  background: var(--accent);
+  color: var(--white);
+}
+
+.otp-timer {
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.status-message {
+  margin-top: var(--spacing-md);
+  color: var(--primary-dark);
+  font-weight: 600;
+  text-align: center;
+}

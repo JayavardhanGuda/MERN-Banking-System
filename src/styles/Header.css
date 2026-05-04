@@ -1,0 +1,219 @@
+/* Header Styles */
+.Header {
+  background-color: var(--white);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px var(--spacing-lg);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all var(--transition-base);
+  z-index: var(--z-header);
+}
+
+.Header.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 10px var(--spacing-lg);
+}
+
+/* Logo */
+.logo-link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity var(--transition-base);
+  display: flex;
+  align-items: center;
+}
+
+.logo-link:hover {
+  opacity: 0.8;
+}
+
+.logo h2 {
+  color: var(--primary-dark);
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.logo p {
+  color: var(--accent);
+  margin: 0;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+/* Navigation */
+.head1 nav {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.head1 nav a {
+  color: var(--text-dark);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color var(--transition-base);
+  display: flex;
+  align-items: center;
+}
+
+.head1 nav a:hover {
+  color: var(--accent);
+}
+
+/* Dropdown Styling */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-dropdown {
+  position: relative;
+  display: inline-block;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  color: var(--text-dark);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 5px 0;
+  transition: color var(--transition-base);
+}
+
+.dropdown-toggle:hover {
+  color: var(--accent);
+}
+
+.dropdown-icon {
+  font-size: 0.75rem;
+  transition: transform var(--transition-base);
+}
+
+.dropdown-icon.active {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  min-width: 200px;
+  display: none;
+  flex-direction: column;
+  z-index: var(--z-header);
+  margin-top: 0;
+}
+
+.dropdown-menu.show {
+  display: flex;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 12px 16px;
+  color: var(--text-dark);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all var(--transition-base);
+  border-left: 3px solid transparent;
+}
+
+.dropdown-menu a:first-child {
+  border-top-left-radius: var(--radius-sm);
+  border-top-right-radius: var(--radius-sm);
+}
+
+.dropdown-menu a:last-child {
+  border-bottom-left-radius: var(--radius-sm);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.dropdown-menu a:hover {
+  background-color: var(--bg-card);
+  color: var(--accent);
+  border-left-color: var(--accent);
+  padding-left: 20px;
+}
+
+/* Hamburger Menu */
+.hamburger {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--primary-dark);
+  margin-left: var(--spacing-lg);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80%;
+  background: transparent;
+  z-index: calc(var(--z-sidebar) - 1);
+}
+
+/* Sidebar Menu */
+.loginDiv {
+  position: fixed;
+  top: 0;
+  right: -250px;
+  width: 250px;
+  height: 100vh;
+  background-color: var(--primary-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding-top: 50px;
+  transition: right var(--transition-base);
+  z-index: var(--z-sidebar);
+}
+
+.loginDiv.open {
+  right: 0;
+}
+
+.loginDiv button {
+  background-color: var(--accent);
+  color: var(--white);
+  border: none;
+  padding: 10px 15px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  width: 90%;
+  text-align: center;
+  font-weight: 600;
+  transition: background-color var(--transition-base);
+}
+
+.loginDiv button:hover {
+  background-color: var(--accent-dark);
+}

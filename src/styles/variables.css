@@ -1,0 +1,47 @@
+/* Color Variables */
+:root {
+  --primary-dark: #001f3f;
+  --primary-light: #003d66;
+  --accent: #17a2b8;
+  --accent-dark: #138496;
+  --text-dark: #333;
+  --text-light: #666;
+  --text-muted: #ddd;
+  --border-light: #e0e0e0;
+  --bg-light: #f5f7fa;
+  --bg-lighter: #f8f9fa;
+  --bg-card: #f0f2f5;
+  --white: white;
+  --error: #ff6b6b;
+  
+  /* Spacing */
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 15px;
+  --spacing-lg: 20px;
+  --spacing-xl: 30px;
+  --spacing-2xl: 40px;
+  --spacing-3xl: 50px;
+  --spacing-4xl: 60px;
+  
+  /* Border Radius */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  
+  /* Z-index */
+  --z-overlay: 998;
+  --z-sidebar: 999;
+  --z-header: 1000;
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* Font Families */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}

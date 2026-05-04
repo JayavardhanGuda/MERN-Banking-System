@@ -1,0 +1,72 @@
+/* Breadcrumbs Styles */
+.breadcrumbs {
+  background-color: #f8f9fa;
+  padding: 12px 0;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 20px;
+}
+
+.breadcrumb-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.breadcrumb-home {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb-home:hover {
+  color: #0056b3;
+}
+
+.breadcrumb-home svg {
+  font-size: 16px;
+}
+
+.breadcrumb-separator {
+  margin: 0 8px;
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.breadcrumb-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb-link:hover {
+  color: #0056b3;
+}
+
+.breadcrumb-current {
+  color: #495057;
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .breadcrumb-container {
+    padding: 0 15px;
+    font-size: 13px;
+  }
+
+  .breadcrumb-home span {
+    display: none;
+  }
+
+  .breadcrumb-separator {
+    margin: 0 6px;
+  }
+}

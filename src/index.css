@@ -1,0 +1,191 @@
+/* Main CSS Entry Point - Import all modular stylesheets */
+
+/* 1. Variables and Theme */
+@import './styles/variables.css';
+
+/* 2. Component Styles */
+@import './styles/Header.css';
+@import './styles/Footer.css';
+@import './styles/Breadcrumbs.css';
+
+/* 3. Page Styles */
+@import './styles/Global.css';
+@import './styles/Login.css';
+@import './styles/LoginSelector.css';
+@import './styles/Register.css';
+
+/* 4. Responsive Design */
+@import './styles/responsive.css';
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Savings Account Page */
+.savings-page {
+  background: var(--bg-light);
+  padding: 40px 0 80px;
+}
+
+.savings-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.savings-breadcrumb {
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+  color: var(--text-light);
+}
+
+.savings-hero h1 {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  line-height: 1.05;
+  margin-bottom: 32px;
+  max-width: 680px;
+}
+
+.savings-hero-links {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.hero-btn {
+  padding: 18px 40px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 170px;
+  transition: all var(--transition-base);
+}
+
+.hero-btn-primary {
+  background: var(--primary-dark);
+  color: var(--white);
+}
+
+.hero-btn-secondary {
+  background: var(--white);
+  color: var(--primary-dark);
+  border: 1px solid rgba(0, 31, 63, 0.12);
+}
+
+.hero-btn:hover {
+  transform: translateY(-2px);
+}
+
+.savings-hero-image {
+  position: relative;
+  min-height: 420px;
+}
+
+.savings-card {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-weight: 700;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+}
+
+.savings-card-savings {
+  top: 24px;
+  right: 0;
+  background: linear-gradient(135deg, #ff8a00, #ff3d00);
+}
+
+.savings-card-demat {
+  top: 140px;
+  left: 20px;
+  background: linear-gradient(135deg, #d32f2f, #b71c1c);
+}
+
+.savings-card-trading {
+  bottom: 20px;
+  right: 10px;
+  background: linear-gradient(135deg, #0288d1, #01579b);
+}
+
+.savings-hero-visual {
+  position: absolute;
+  top: 10%;
+  left: 14%;
+  right: 14%;
+  bottom: 10%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+  border-radius: 34px;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+.savings-features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 24px;
+}
+
+.feature-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  box-shadow: 0 20px 44px rgba(0,0,0,0.05);
+}
+
+.feature-card h2 {
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+}
+
+.feature-card p {
+  margin: 0;
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .savings-hero {
+    grid-template-columns: 1fr;
+  }
+  .savings-hero-image {
+    min-height: 360px;
+  }
+}
+
+@media (max-width: 680px) {
+  .savings-hero {
+    padding: 24px 16px;
+  }
+  .hero-btn {
+    width: 100%;
+    min-width: auto;
+  }
+}
