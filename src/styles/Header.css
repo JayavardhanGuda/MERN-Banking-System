@@ -217,3 +217,24 @@
 .loginDiv button:hover {
   background-color: var(--accent-dark);
 }
+
+.logout-nav-btn {
+  background: none;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+}
+
+.logout-nav-btn:hover {
+  background-color: var(--accent);
+  color: var(--white);
+}
+

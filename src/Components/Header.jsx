@@ -1,11 +1,48 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
 
 export default function Header(){
+    const navigate = useNavigate();
     const [showLogin, setShowLogin] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
     const isScrolled = true;
+
+    useEffect(() => {
+        const user = localStorage.getItem('currentUser');
+        if (user) {
+            setCurrentUser(JSON.parse(user));
+        }
+    }, []);
+
+    const handleLogout = () => {
+        if (currentUser) {
+            // Save logout information to localStorage
+            const logoutRecord = {
+                accountNumber: currentUser.accountNumber,
+                userName: `${currentUser.firstName} ${currentUser.lastName}`,
+                logoutTime: new Date().toLocaleString(),
+                logoutDate: new Date().toLocaleDateString(),
+                timestamp: Date.now()
+            };
+
+            // Get existing logout records
+            const logoutHistory = JSON.parse(localStorage.getItem('logoutHistory') || '[]');
+            logoutHistory.push(logoutRecord);
+            localStorage.setItem('logoutHistory', JSON.stringify(logoutHistory));
+
+            // Also save last logout for this user
+            localStorage.setItem(`lastLogout_${currentUser.accountNumber}`, JSON.stringify(logoutRecord));
+        }
+
+        // Clear current user session
+        localStorage.removeItem('currentUser');
+        setCurrentUser(null);
+
+        // Redirect to login
+        navigate('/login');
+    };
 
     const handleMouseEnter = (dropdown) => {
         setActiveDropdown(dropdown);
@@ -111,6 +148,14 @@ export default function Header(){
 
                     <Link to="/about">About Us</Link>
                     <Link to="/contact">Contact Us</Link>
+                    {currentUser && (
+                        <button 
+                            className="logout-nav-btn" 
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </button>
+                    )}
                     <button className="hamburger" onClick={() => setShowLogin(!showLogin)}>
                     ☰
                     </button>

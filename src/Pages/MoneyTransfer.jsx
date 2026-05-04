@@ -256,6 +256,29 @@ const MoneyTransfer = () => {
           history.push(transferRecord);
           localStorage.setItem(historyKey, JSON.stringify(history));
 
+          // Save to recipient's transfer history as credit
+          const recipientHistoryKey = `transferHistory_${recipientDetails.accountNumber}`;
+          const recipientRecord = {
+            id: Date.now(),
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString(),
+            type: 'transfer',
+            senderAccount: currentUser.accountNumber,
+            senderName: `${currentUser.firstName} ${currentUser.lastName}`,
+            recipientAccount: recipientDetails.accountNumber,
+            amount: transferAmount.toFixed(2),
+            description: description,
+            status: 'completed',
+            balanceAfter: bankAccounts[recipientAccountIndex].balance
+          };
+          const recipientExistingHistory = localStorage.getItem(recipientHistoryKey);
+          const recipientHistory = recipientExistingHistory ? JSON.parse(recipientExistingHistory) : [];
+          recipientHistory.push(recipientRecord);
+          localStorage.setItem(recipientHistoryKey, JSON.stringify(recipientHistory));
+
+          // Dispatch event to update dashboard
+          window.dispatchEvent(new Event('transferCompleted'));
+
           // Update currentUser with new balance
           const updatedUser = { ...currentUser, balance: bankAccounts[senderAccountIndex].balance };
           localStorage.setItem('currentUser', JSON.stringify(updatedUser));

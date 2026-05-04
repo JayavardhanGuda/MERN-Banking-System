@@ -9,6 +9,7 @@ import '../styles/Dashboard.css'
 export default function UserDashboard() {
   const [activeSection, setActiveSection] = useState('details')
   const [currentUser, setCurrentUser] = useState(null)
+  const [transactions, setTransactions] = useState([])
   const transactionData = [
     { date: '2026-04-20', description: 'Salary deposit', amount: '+₹45,000.00', status: 'Credited' },
     { date: '2026-04-19', description: 'NEFT payment - Rent', amount: '-₹12,500.00', status: 'Debited' },
@@ -19,9 +20,31 @@ export default function UserDashboard() {
 
   const transferMethods = ['IMPS', 'NEFT', 'RTGS']
 
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr)
+    return date.toISOString().split('T')[0]
+  }
+
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
-    setCurrentUser(storedUser)
+    const loadData = () => {
+      const storedUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
+      setCurrentUser(storedUser)
+      if (storedUser) {
+        const historyKey = `transferHistory_${storedUser.accountNumber}`
+        const history = JSON.parse(localStorage.getItem(historyKey) || '[]')
+        // Sort by date descending
+        history.sort((a, b) => new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time))
+        setTransactions(history)
+      }
+    }
+    loadData()
+
+    const handleTransferCompleted = () => {
+      loadData()
+    }
+
+    window.addEventListener('transferCompleted', handleTransferCompleted)
+    return () => window.removeEventListener('transferCompleted', handleTransferCompleted)
   }, [])
 
   const renderContent = () => {
@@ -62,7 +85,17 @@ export default function UserDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactionData.map((item, index) => (
+                  {transactions.length > 0 ? transactions.map((item, index) => {
+                    const isCredit = item.recipientAccount === currentUser.accountNumber;
+                    return (
+                      <tr key={item.id || index}>
+                        <td>{formatDate(item.date)}</td>
+                        <td>{isCredit ? `Transfer from ${item.senderName} - ${item.description}` : `Transfer to ${item.recipientName} - ${item.description}`}</td>
+                        <td>{isCredit ? `+₹${item.amount}` : `-₹${item.amount}`}</td>
+                        <td>{isCredit ? 'Credited' : 'Debited'}</td>
+                      </tr>
+                    );
+                  }) : transactionData.map((item, index) => (
                     <tr key={index}>
                       <td>{item.date}</td>
                       <td>{item.description}</td>
@@ -73,7 +106,7 @@ export default function UserDashboard() {
                 </tbody>
               </table>
             </div>
-            <p className="dashboard-text">Sample account transactions are shown above for review.</p>
+            <p className="dashboard-text">{transactions.length > 0 ? 'Your recent transactions are shown above.' : 'Sample account transactions are shown above for review.'}</p>
           </>
         )
       default:
