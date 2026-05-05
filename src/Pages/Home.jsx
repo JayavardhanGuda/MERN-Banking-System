@@ -121,48 +121,7 @@ export default function Home(){
         </div>
       </section>
 
-      {/* Featured Offers */}
-      <section className="featured-offers">
-        <h2>Offers for You!</h2>
-        <div className="offers-grid">
-          <div className="offer-card">
-            <div className="offer-badge">Hot Selling</div>
-            <h3>Credit Card</h3>
-            <p>Enjoy discounts on shopping, dining, entertainment and more with premium rewards!</p>
-            <div className="offer-actions">
-              <button className="btn-apply">APPLY</button>
-              <button className="btn-details">DETAILS</button>
-            </div>
-          </div>
-          <div className="offer-card">
-            <div className="offer-badge">Ongoing Offer</div>
-            <h3>Home Loan</h3>
-            <p>Get a Home Loan of up to ₹5 crore with quick processing and competitive rates.</p>
-            <div className="offer-actions">
-              <button className="btn-apply">APPLY</button>
-              <button className="btn-details">DETAILS</button>
-            </div>
-          </div>
-          <div className="offer-card">
-            <div className="offer-badge">Ongoing Offer</div>
-            <h3>Personal Loan</h3>
-            <p>Get instant disbursement with no foreclosure charges after 12 EMIs.</p>
-            <div className="offer-actions">
-              <button className="btn-apply">APPLY</button>
-              <button className="btn-details">DETAILS</button>
-            </div>
-          </div>
-          <div className="offer-card">
-            <div className="offer-badge">Ongoing Offer</div>
-            <h3>Fixed Deposits</h3>
-            <p>Invest in FDs with attractive interest rates without worrying about market fluctuations.</p>
-            <div className="offer-actions">
-              <button className="btn-apply">INVEST</button>
-              <button className="btn-details">DETAILS</button>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Why Choose Us */}
       <section className="why-choose">

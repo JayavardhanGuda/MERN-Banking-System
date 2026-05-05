@@ -95,10 +95,6 @@ main {
   max-width: 620px;
 }
 
-.carousel-slide{
-  margin-top: 70px;
-}
-
 .carousel-slide h1 {
   font-size: 2.5rem;
   margin: 0 0 15px 0;

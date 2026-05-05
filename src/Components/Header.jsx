@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaChevronDown } from "react-icons/fa";
+import { FaChevronDown, FaUser } from "react-icons/fa";
 
 export default function Header(){
     const navigate = useNavigate();
     const [showLogin, setShowLogin] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
+    const [showProfileMenu, setShowProfileMenu] = useState(false);
     const isScrolled = true;
 
     useEffect(() => {
@@ -14,6 +15,27 @@ export default function Header(){
         if (user) {
             setCurrentUser(JSON.parse(user));
         }
+
+        const handleStorageChange = () => {
+            const updatedUser = localStorage.getItem('currentUser');
+            setCurrentUser(updatedUser ? JSON.parse(updatedUser) : null);
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        const handleDocumentClick = (e) => {
+            const profileContainer = document.querySelector('.profile-menu-container');
+            if (profileContainer && !profileContainer.contains(e.target)) {
+                setShowProfileMenu(false);
+            }
+        };
+
+        document.addEventListener('click', handleDocumentClick);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            document.removeEventListener('click', handleDocumentClick);
+        };
     }, []);
 
     const handleLogout = () => {
@@ -78,11 +100,10 @@ export default function Header(){
                             <a href="#accounts">Current Account</a>
                             <a href="#accounts">Salary Account</a>
                             <a href="#accounts">Student Account</a>
-                            <a href="#accounts">Senior Citizen Account</a>
                         </div>
                     </div>
 
-                    <div 
+                    {/* <div 
                         className="nav-dropdown"
                         onMouseEnter={() => handleMouseEnter('cards')}
                         onMouseLeave={handleMouseLeave}
@@ -96,9 +117,9 @@ export default function Header(){
                             <a href="#cards">Prepaid Cards</a>
                             <a href="#cards">Corporate Cards</a>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div 
+                    {/* <div 
                         className="nav-dropdown"
                         onMouseEnter={() => handleMouseEnter('loans')}
                         onMouseLeave={handleMouseLeave}
@@ -113,9 +134,9 @@ export default function Header(){
                             <a href="#loans">Education Loan</a>
                             <a href="#loans">Business Loan</a>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div 
+                    {/* <div 
                         className="nav-dropdown"
                         onMouseEnter={() => handleMouseEnter('deposits')}
                         onMouseLeave={handleMouseLeave}
@@ -128,9 +149,9 @@ export default function Header(){
                             <a href="#deposits">Recurring Deposits</a>
                             <a href="#deposits">Bulk Deposits</a>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div 
+                    {/* <div 
                         className="nav-dropdown"
                         onMouseEnter={() => handleMouseEnter('investments')}
                         onMouseLeave={handleMouseLeave}
@@ -144,32 +165,56 @@ export default function Header(){
                             <a href="#investments">Bonds</a>
                             <a href="#investments">Insurance Products</a>
                         </div>
-                    </div>
+                    </div> */}
 
                     <Link to="/about">About Us</Link>
                     <Link to="/contact">Contact Us</Link>
-                    {currentUser && (
+                    <div className="profile-menu-container">
                         <button 
-                            className="logout-nav-btn" 
-                            onClick={handleLogout}
+                            className="profile-avatar-btn" 
+                            title={currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : 'Guest User'}
+                            onClick={() => setShowProfileMenu(!showProfileMenu)}
                         >
-                            Logout
+                            <FaUser className="profile-avatar-icon" />
                         </button>
-                    )}
-                    <button className="hamburger" onClick={() => setShowLogin(!showLogin)}>
-                    ☰
-                    </button>
+                        {showProfileMenu && (
+                            <div className="profile-dropdown">
+                                {currentUser ? (
+                                    <>
+                                        <div className="profile-user-name">{currentUser.firstName} {currentUser.lastName}</div>
+                                        <Link to="/user-dashboard" className="profile-menu-link" onClick={() => setShowProfileMenu(false)}>
+                                            Account
+                                        </Link>
+                                        <button className="profile-menu-btn logout-btn" onClick={() => { handleLogout(); setShowProfileMenu(false); }}>
+                                            Logout
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link to="/login" className="profile-menu-link" onClick={() => setShowProfileMenu(false)}>
+                                            Login
+                                        </Link>
+                                        <Link to="/register" className="profile-menu-link" onClick={() => setShowProfileMenu(false)}>
+                                            Register as New User
+                                        </Link>
+                                    </>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </nav>
                 {showLogin && (
                 <div className="overlay" onClick={() => setShowLogin(false)}></div>
                 )}
             </div>
         </div>
+        {showLogin && (
         <div className={`loginDiv ${showLogin ? "open" : ""}`}>
             <button onClick={() => window.location.href="/login"}>Login</button>
             <button onClick={() => window.location.href="/register"}>New User Register</button>
             <button onClick={() => window.location.href="/onlineAccount"}>Apply for Online Account</button>
         </div>
+        )}
  
         </>
     )
