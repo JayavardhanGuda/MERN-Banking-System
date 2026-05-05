@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import { FaShieldAlt, FaCreditCard, FaPiggyBank, FaMobileAlt, FaChevronLeft, FaChevronRight, FaUser, FaBuilding, FaChartLine, FaUniversity, FaClipboardList, FaSearch, FaLock, FaBan, FaExclamationTriangle } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 import houseLoan from '../assets/house_loan.jpg'
 
 export default function Home(){
@@ -93,31 +94,32 @@ export default function Home(){
       {/* Quick Categories */}
       <section id="services" className="quick-categories">
         <div className="categories-grid">
-          <div className="category-card">
-            <FaClipboardList className="category-icon" />
-            <h3>Service Request</h3>
-            <FaChevronRight className="arrow-icon" />
-          </div>
-          <div className="category-card">
+          <Link to="/service-request" className="category-card-link">
+            <div className="category-card">
+              <FaClipboardList className="category-icon" />
+              <h3>Service Request</h3>
+              <FaChevronRight className="arrow-icon" />
+            </div>
+          </Link>
+          {/* <div className="category-card">
             <FaSearch className="category-icon" />
             <h3>Track Applications</h3>
             <FaChevronRight className="arrow-icon" />
-          </div>
-          <div className="category-card">
-            <FaLock className="category-icon" />
-            <h3>Smart Lock</h3>
-            <FaChevronRight className="arrow-icon" />
-          </div>
-          <div className="category-card">
-            <FaBan className="category-icon" />
-            <h3>Block Card</h3>
-            <FaChevronRight className="arrow-icon" />
-          </div>
-          <div className="category-card">
-            <FaExclamationTriangle className="category-icon" />
-            <h3>Report Fraud</h3>
-            <FaChevronRight className="arrow-icon" />
-          </div>
+          </div> */}
+          <Link to="/smart-lock" className="category-card-link">
+            <div className="category-card">
+              <FaLock className="category-icon" />
+              <h3>Smart Lock</h3>
+              <FaChevronRight className="arrow-icon" />
+            </div>
+          </Link>
+          <Link to="/report-fraud" className="category-card-link">
+            <div className="category-card">
+              <FaExclamationTriangle className="category-icon" />
+              <h3>Report Fraud</h3>
+              <FaChevronRight className="arrow-icon" />
+            </div>
+          </Link>
         </div>
       </section>
 

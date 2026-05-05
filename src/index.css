@@ -13,6 +13,10 @@
 @import './styles/Login.css';
 @import './styles/LoginSelector.css';
 @import './styles/Register.css';
+@import './styles/ServiceRequest.css';
+@import './styles/SmartLock.css';
+@import './styles/LockerBookings.css';
+@import './styles/ReportFraud.css';
 
 /* 4. Responsive Design */
 @import './styles/responsive.css';

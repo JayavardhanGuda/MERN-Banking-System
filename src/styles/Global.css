@@ -270,6 +270,22 @@ main {
   opacity: 1;
 }
 
+.category-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.category-card-link:hover .category-card {
+  background: var(--bg-card);
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.category-card-link:hover .arrow-icon {
+  opacity: 1;
+}
+
 /* Featured Offers */
 .featured-offers {
   padding: var(--spacing-4xl) var(--spacing-lg);

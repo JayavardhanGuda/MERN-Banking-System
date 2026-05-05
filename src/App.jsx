@@ -11,6 +11,10 @@ import Login from './Pages/Login'
 import AdminDashboard from './Pages/AdminDashboard'
 import UserDashboard from './Pages/UserDashboard'
 import InternetBankingRegister from './Pages/InternetBankingRegister'
+import ServiceRequest from './Pages/ServiceRequest'
+import SmartLock from './Pages/SmartLock'
+import LockerBookings from './Pages/LockerBookings'
+import ReportFraud from './Pages/ReportFraud'
  
  
 function App() {
@@ -31,6 +35,10 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />}/>
         <Route path="/register" element={<Register />}/>
         <Route path="/internet-banking-register" element={<InternetBankingRegister />}/>
+        <Route path="/service-request" element={<ServiceRequest />}/>
+        <Route path="/smart-lock" element={<SmartLock />}/>
+        <Route path="/locker-bookings" element={<LockerBookings />}/>
+        <Route path="/report-fraud" element={<ReportFraud />}/>
       </Routes>
     </BrowserRouter>
     </>
