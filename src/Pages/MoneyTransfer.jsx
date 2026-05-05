@@ -8,7 +8,9 @@ import '../styles/MoneyTransfer.css';
 
 const MoneyTransfer = () => {
   const navigate = useNavigate();
+  
   const [step, setStep] = useState(1);
+
   const [currentUser, setCurrentUser] = useState(null);
   const [isRegistered, setIsRegistered] = useState(false);
   const [loading, setLoading] = useState(true);

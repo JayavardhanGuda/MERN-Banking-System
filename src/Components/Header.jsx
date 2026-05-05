@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaChevronDown, FaUser } from "react-icons/fa";
 
@@ -9,6 +9,7 @@ export default function Header(){
     const [currentUser, setCurrentUser] = useState(null);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const isScrolled = true;
+    const profileMenuRef = useRef(null);
 
     useEffect(() => {
         const user = localStorage.getItem('currentUser');
@@ -24,8 +25,7 @@ export default function Header(){
         window.addEventListener('storage', handleStorageChange);
 
         const handleDocumentClick = (e) => {
-            const profileContainer = document.querySelector('.profile-menu-container');
-            if (profileContainer && !profileContainer.contains(e.target)) {
+            if (profileMenuRef.current && !profileMenuRef.current.contains(e.target)) {
                 setShowProfileMenu(false);
             }
         };
@@ -38,7 +38,10 @@ export default function Header(){
         };
     }, []);
 
-    const handleLogout = () => {
+    const handleLogout = (e) => {
+        if (e) {
+            e.stopPropagation();
+        }
         if (currentUser) {
             // Save logout information to localStorage
             const logoutRecord = {
@@ -72,6 +75,19 @@ export default function Header(){
 
     const handleMouseLeave = () => {
         setActiveDropdown(null);
+    };
+
+    const handleScrollToSection = (sectionId) => {
+        // Navigate to home page
+        navigate('/');
+        
+        // Scroll to section after a small delay to ensure page is loaded
+        setTimeout(() => {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100);
     };
 
     return(
@@ -167,10 +183,23 @@ export default function Header(){
                         </div>
                     </div> */}
 
-                    <Link to="/about">About Us</Link>
-                    <Link to="/contact">Contact Us</Link>
-                    <div className="profile-menu-container">
+                    <button 
+                        className="nav-link" 
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                        onClick={() => handleScrollToSection('about-us')}
+                    >
+                        About Us
+                    </button>
+                    <button 
+                        className="nav-link" 
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                        onClick={() => handleScrollToSection('contact-us')}
+                    >
+                        Contact Us
+                    </button>
+                    <div className="profile-menu-container" ref={profileMenuRef}>
                         <button 
+                            type="button"
                             className="profile-avatar-btn" 
                             title={currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : 'Guest User'}
                             onClick={() => setShowProfileMenu(!showProfileMenu)}
@@ -185,7 +214,7 @@ export default function Header(){
                                         <Link to="/user-dashboard" className="profile-menu-link" onClick={() => setShowProfileMenu(false)}>
                                             Account
                                         </Link>
-                                        <button className="profile-menu-btn logout-btn" onClick={() => { handleLogout(); setShowProfileMenu(false); }}>
+                                        <button type="button" className="profile-menu-btn logout-btn" onClick={(e) => { handleLogout(e); setShowProfileMenu(false); }}>
                                             Logout
                                         </button>
                                     </>

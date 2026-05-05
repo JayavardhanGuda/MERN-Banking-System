@@ -270,6 +270,22 @@ main {
   opacity: 1;
 }
 
+.category-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.category-card-link:hover .category-card {
+  background: var(--bg-card);
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.category-card-link:hover .arrow-icon {
+  opacity: 1;
+}
+
 /* Featured Offers */
 .featured-offers {
   padding: var(--spacing-4xl) var(--spacing-lg);
@@ -416,4 +432,62 @@ main {
   color: var(--text-light);
   line-height: 1.6;
   font-size: 0.95rem;
+}
+
+.about-us-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #84aae7 0%, #343844 50%, #2a476c 100%);
+}
+ 
+ 
+ 
+ 
+.about-us-container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 280px 1fr; /* LEFT narrow, RIGHT wide */
+  gap: 40px;
+}
+ 
+/* LEFT CARD */
+.about-left-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+ 
+.about-left-card h2 {
+  margin-bottom: 16px;
+  color: #0a2540;
+}
+ 
+.about-left-card p {
+  line-height: 1.7;
+  color: #444;
+}
+ 
+/* RIGHT STACK */
+.about-right-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+ 
+.about-info-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+ 
+.about-info-card h3 {
+  margin-bottom: 8px;
+  color: #1d4ed8;
+}
+ 
+.about-info-card p {
+  color: #555;
+  line-height: 1.6;
 }

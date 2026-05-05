@@ -1,4 +1,4 @@
-/* Footer Styles */
+/* Footer Styles
 .footer {
   background-color: var(--primary-dark);
   color: var(--white);
@@ -56,4 +56,96 @@
 
 .social-icons a:hover {
   color: var(--accent);
+} */
+
+.footer {
+  background-color: var(--primary-dark);
+  color: var(--white);
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  border-top: 1px solid var(--border-light);
+}
+ 
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* ✅ 4 equal columns */
+  column-gap: 60px;                              /* ✅ equal gap between all */
+  max-width: 1400px;
+  margin: 0 auto;
+}
+ 
+ 
+.footer-section {
+  /* flex: 1;
+  min-width: 200px;
+  margin: 0px; */
+  width: 100%;
+  text-align: center;
+}
+ 
+.footer-section h4 {
+  color: var(--accent);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+ 
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+ 
+.footer-section ul li {
+  margin: var(--spacing-xs) 0;
+}
+ 
+.footer-section ul li a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color var(--transition-base);
+}
+ 
+.footer-section ul li a:hover {
+  color: var(--accent);
+}
+ 
+.social-icons a {
+  color: var(--white);
+  margin-right: var(--spacing-md);
+  font-size: 20px;
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+ 
+.social-icons a:hover {
+  color: var(--accent);
+}
+ 
+/* Contact Information */
+.contact-info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ 
+.contact-info li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: var(--spacing-xs) 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  justify-content: center;
+}
+ 
+.contact-info svg {
+  margin-top: 3px;
+  color: var(--accent);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+ 
+#about-us,
+#contact-us {
+  scroll-margin-top: 100px; /* adjust to header height */
 }

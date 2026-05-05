@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import { FaShieldAlt, FaCreditCard, FaPiggyBank, FaMobileAlt, FaChevronLeft, FaChevronRight, FaUser, FaBuilding, FaChartLine, FaUniversity, FaClipboardList, FaSearch, FaLock, FaBan, FaExclamationTriangle } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 import houseLoan from '../assets/house_loan.jpg'
 
 export default function Home(){
@@ -93,33 +94,79 @@ export default function Home(){
       {/* Quick Categories */}
       <section id="services" className="quick-categories">
         <div className="categories-grid">
-          <div className="category-card">
-            <FaClipboardList className="category-icon" />
-            <h3>Service Request</h3>
-            <FaChevronRight className="arrow-icon" />
-          </div>
-          <div className="category-card">
+          <Link to="/service-request" className="category-card-link">
+            <div className="category-card">
+              <FaClipboardList className="category-icon" />
+              <h3>Service Request</h3>
+              <FaChevronRight className="arrow-icon" />
+            </div>
+          </Link>
+          {/* <div className="category-card">
             <FaSearch className="category-icon" />
             <h3>Track Applications</h3>
             <FaChevronRight className="arrow-icon" />
-          </div>
-          <div className="category-card">
-            <FaLock className="category-icon" />
-            <h3>Smart Lock</h3>
-            <FaChevronRight className="arrow-icon" />
-          </div>
-          <div className="category-card">
-            <FaBan className="category-icon" />
-            <h3>Block Card</h3>
-            <FaChevronRight className="arrow-icon" />
-          </div>
-          <div className="category-card">
-            <FaExclamationTriangle className="category-icon" />
-            <h3>Report Fraud</h3>
-            <FaChevronRight className="arrow-icon" />
-          </div>
+          </div> */}
+          <Link to="/smart-lock" className="category-card-link">
+            <div className="category-card">
+              <FaLock className="category-icon" />
+              <h3>Smart Lock</h3>
+              <FaChevronRight className="arrow-icon" />
+            </div>
+          </Link>
+          <Link to="/report-fraud" className="category-card-link">
+            <div className="category-card">
+              <FaExclamationTriangle className="category-icon" />
+              <h3>Report Fraud</h3>
+              <FaChevronRight className="arrow-icon" />
+            </div>
+          </Link>
         </div>
       </section>
+
+      {/* About Us Section */}
+<section id="about-us" className="about-us-section">
+  <div className="about-us-container">
+ 
+    {/* LEFT: Tall + Narrow */}
+    <div className="about-left-card">
+      <h2>About Us</h2>
+      <p>
+        PavitraBandham Cooperative Bank is built on trust, transparency,
+        and customer‑focused banking solutions. With years of
+        reliability and innovation, we aim to empower financial growth
+        for every individual and business we serve.
+      </p>
+    </div>
+ 
+    {/* RIGHT: 3 Short + Wide Cards */}
+    <div className="about-right-cards">
+      <div className="about-info-card">
+        <h3>10+ Years of Service</h3>
+        <p>
+          A decade of dependable banking services delivering stability,
+          security, and long‑term customer relationships.
+        </p>
+      </div>
+ 
+      <div className="about-info-card">
+        <h3>Customer‑Centric Approach</h3>
+        <p>
+          Over 100,000 customers trust our personalized financial
+          solutions designed around real‑world needs.
+        </p>
+      </div>
+ 
+      <div className="about-info-card">
+        <h3>Award‑Winning Support</h3>
+        <p>
+          Recognized for excellence in customer service and innovative
+          banking practices that deliver real value.
+        </p>
+      </div>
+    </div>
+ 
+  </div>
+</section>
 
       
 
