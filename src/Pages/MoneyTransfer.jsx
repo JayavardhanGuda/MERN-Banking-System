@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowRight, FaUser, FaLock, FaCheck, FaExclamationCircle } from 'react-icons/fa';
+import { FaArrowRight, FaUser, FaLock, FaCheck, FaExclamationCircle, FaDownload, FaHome } from 'react-icons/fa';
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 import Breadcrumbs from '../Components/Breadcrumbs';
@@ -35,6 +35,9 @@ const MoneyTransfer = () => {
 
   // Recipient Details
   const [recipientDetails, setRecipientDetails] = useState(null);
+
+  // Receipt
+  const [receiptData, setReceiptData] = useState(null);
 
   useEffect(() => {
     try {
@@ -283,14 +286,25 @@ const MoneyTransfer = () => {
           const updatedUser = { ...currentUser, balance: bankAccounts[senderAccountIndex].balance };
           localStorage.setItem('currentUser', JSON.stringify(updatedUser));
 
+          // Create receipt data
+          const receipt = {
+            referenceNumber: 'TXN' + Date.now(),
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString(),
+            status: 'Success',
+            senderName: `${currentUser.firstName} ${currentUser.lastName}`,
+            senderAccount: currentUser.accountNumber,
+            recipientName: recipientDetails.accountHolder,
+            recipientAccount: recipientDetails.accountNumber,
+            amount: transferAmount.toFixed(2),
+            description: description,
+            senderBalanceBefore: (senderBalance).toFixed(2),
+            senderBalanceAfter: bankAccounts[senderAccountIndex].balance
+          };
+
+          setReceiptData(receipt);
           setSuccessMessage('Transfer completed successfully!');
           setIsProcessing(false);
-
-          // Reset form after 2 seconds
-          setTimeout(() => {
-            resetTransferForm();
-            navigate('/user-dashboard');
-          }, 2000);
         } catch (error) {
           setErrorMessage('Error processing transfer');
           console.error('Transfer error:', error);
@@ -320,6 +334,202 @@ const MoneyTransfer = () => {
     setErrorMessage('');
   };
 
+  // Download receipt as HTML file
+  const downloadReceipt = () => {
+    if (!receiptData) return;
+
+    const receiptHTML = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Fund Transfer Receipt</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 20px;
+              background-color: #f5f5f5;
+            }
+            .receipt-container {
+              background-color: white;
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 30px;
+              border-radius: 8px;
+              box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            .header {
+              text-align: center;
+              border-bottom: 2px solid #1b62b0;
+              padding-bottom: 20px;
+              margin-bottom: 30px;
+            }
+            .header h1 {
+              margin: 0;
+              color: #1b62b0;
+              font-size: 28px;
+            }
+            .header p {
+              margin: 5px 0 0 0;
+              color: #666;
+              font-size: 14px;
+            }
+            .status {
+              text-align: center;
+              margin-bottom: 30px;
+              padding: 15px;
+              background-color: #d4edda;
+              border: 1px solid #c3e6cb;
+              border-radius: 5px;
+              color: #155724;
+              font-weight: bold;
+            }
+            .section {
+              margin-bottom: 25px;
+            }
+            .section-title {
+              font-weight: bold;
+              color: #1b62b0;
+              margin-bottom: 10px;
+              font-size: 14px;
+              text-transform: uppercase;
+              border-bottom: 1px solid #eee;
+              padding-bottom: 5px;
+            }
+            .row {
+              display: flex;
+              justify-content: space-between;
+              padding: 10px 0;
+              border-bottom: 1px solid #f0f0f0;
+              font-size: 14px;
+            }
+            .row.last {
+              border-bottom: none;
+            }
+            .label {
+              color: #666;
+              font-weight: normal;
+            }
+            .value {
+              color: #333;
+              font-weight: bold;
+            }
+            .amount-highlight {
+              background-color: #f9f9f9;
+              padding: 10px;
+              border-radius: 5px;
+              font-size: 16px;
+              color: #1b62b0;
+            }
+            .footer {
+              text-align: center;
+              margin-top: 30px;
+              padding-top: 20px;
+              border-top: 1px solid #eee;
+              color: #999;
+              font-size: 12px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="receipt-container">
+            <div class="header">
+              <h1>PavitraBandham Cooperative Bank</h1>
+              <p>Fund Transfer Receipt</p>
+            </div>
+
+            <div class="status">✓ ${receiptData.status}</div>
+
+            <div class="section">
+              <div class="section-title">Transaction Details</div>
+              <div class="row">
+                <span class="label">Reference Number:</span>
+                <span class="value">${receiptData.referenceNumber}</span>
+              </div>
+              <div class="row">
+                <span class="label">Date:</span>
+                <span class="value">${receiptData.date}</span>
+              </div>
+              <div class="row last">
+                <span class="label">Time:</span>
+                <span class="value">${receiptData.time}</span>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-title">From (Sender)</div>
+              <div class="row">
+                <span class="label">Name:</span>
+                <span class="value">${receiptData.senderName}</span>
+              </div>
+              <div class="row last">
+                <span class="label">Account Number:</span>
+                <span class="value">${receiptData.senderAccount}</span>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-title">To (Recipient)</div>
+              <div class="row">
+                <span class="label">Name:</span>
+                <span class="value">${receiptData.recipientName}</span>
+              </div>
+              <div class="row last">
+                <span class="label">Account Number:</span>
+                <span class="value">${receiptData.recipientAccount}</span>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-title">Amount Details</div>
+              <div class="row">
+                <span class="label">Transfer Amount:</span>
+                <span class="value">₹ ${receiptData.amount}</span>
+              </div>
+              <div class="row last">
+                <span class="label">Description:</span>
+                <span class="value">${receiptData.description}</span>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-title">Account Balance</div>
+              <div class="row">
+                <span class="label">Balance Before Transfer:</span>
+                <span class="value">₹ ${receiptData.senderBalanceBefore}</span>
+              </div>
+              <div class="row last amount-highlight">
+                <span class="label">Balance After Transfer:</span>
+                <span class="value">₹ ${receiptData.senderBalanceAfter}</span>
+              </div>
+            </div>
+
+            <div class="footer">
+              <p>This is a computer-generated receipt. No signature is required.</p>
+              <p>For security, please keep this receipt confidential.</p>
+              <p>© 2026 PavitraBandham Cooperative Bank. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const element = document.createElement('a');
+    const file = new Blob([receiptHTML], { type: 'text/html' });
+    element.href = URL.createObjectURL(file);
+    element.download = `receipt_${receiptData.referenceNumber}.html`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
+  // Reset receipt and go to dashboard
+  const resetReceipt = () => {
+    setReceiptData(null);
+    resetTransferForm();
+    navigate('/user-dashboard');
+  };
+
   const handleCancel = () => {
     resetTransferForm();
     navigate('/user-dashboard');
@@ -333,7 +543,103 @@ const MoneyTransfer = () => {
         <div className="money-transfer-container">
           <div className="loading">Loading...</div>
         </div>
-        <Footer />
+        
+      </div>
+    );
+  }
+
+  // Show receipt after successful transfer
+  if (receiptData) {
+    return (
+      <div className="money-transfer-page">
+        <Header />
+        <Breadcrumbs items={[{ label: 'Fund Transfer', path: '/user-dashboard?tab=transfer' }, { label: 'Receipt', path: '#' }]} />
+        
+        <div className="money-transfer-container">
+          <div className="receipt-container">
+            <div className="receipt-header">
+              <div className="success-icon">✓</div>
+              <h1>Transfer Successful</h1>
+              <p>Your fund transfer has been completed successfully</p>
+            </div>
+
+            <div className="receipt-content">
+              <div className="receipt-section">
+                <h3>Transaction Details</h3>
+                <div className="receipt-row">
+                  <span className="label">Reference Number:</span>
+                  <span className="value">{receiptData.referenceNumber}</span>
+                </div>
+                <div className="receipt-row">
+                  <span className="label">Date & Time:</span>
+                  <span className="value">{receiptData.date} at {receiptData.time}</span>
+                </div>
+              </div>
+
+              <div className="receipt-section">
+                <h3>From (Sender)</h3>
+                <div className="receipt-row">
+                  <span className="label">Name:</span>
+                  <span className="value">{receiptData.senderName}</span>
+                </div>
+                <div className="receipt-row">
+                  <span className="label">Account Number:</span>
+                  <span className="value">{receiptData.senderAccount}</span>
+                </div>
+              </div>
+
+              <div className="receipt-section">
+                <h3>To (Recipient)</h3>
+                <div className="receipt-row">
+                  <span className="label">Name:</span>
+                  <span className="value">{receiptData.recipientName}</span>
+                </div>
+                <div className="receipt-row">
+                  <span className="label">Account Number:</span>
+                  <span className="value">{receiptData.recipientAccount}</span>
+                </div>
+              </div>
+
+              <div className="receipt-section">
+                <h3>Transfer Details</h3>
+                <div className="receipt-row">
+                  <span className="label">Transfer Amount:</span>
+                  <span className="value highlight">₹ {receiptData.amount}</span>
+                </div>
+                <div className="receipt-row">
+                  <span className="label">Description:</span>
+                  <span className="value">{receiptData.description}</span>
+                </div>
+              </div>
+
+              <div className="receipt-section">
+                <h3>Account Balance</h3>
+                <div className="receipt-row">
+                  <span className="label">Balance Before Transfer:</span>
+                  <span className="value">₹ {receiptData.senderBalanceBefore}</span>
+                </div>
+                <div className="receipt-row">
+                  <span className="label">Balance After Transfer:</span>
+                  <span className="value highlight">₹ {receiptData.senderBalanceAfter}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="receipt-actions">
+              <button className="btn btn-primary" onClick={downloadReceipt}>
+                <FaDownload /> Download Receipt
+              </button>
+              <button className="btn btn-secondary" onClick={resetReceipt}>
+                <FaHome /> Back to Dashboard
+              </button>
+            </div>
+
+            <div className="receipt-footer">
+              <p>This is a computer-generated receipt. No signature is required.</p>
+              <p>For security, please keep this receipt confidential.</p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -359,7 +665,6 @@ const MoneyTransfer = () => {
             </button>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -591,7 +896,6 @@ const MoneyTransfer = () => {
         </div>
       </div>
 
-      <Footer />
     </div>
   );
 };

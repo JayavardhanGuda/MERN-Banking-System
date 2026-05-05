@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../Components/Header';
-import Footer from '../Components/Footer';
 import Breadcrumbs from '../Components/Breadcrumbs';
 import { FaUser, FaLock, FaEye, FaEyeSlash, FaArrowLeft, FaCheck, FaShieldAlt } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
@@ -83,10 +82,18 @@ export default function InternetBankingRegister() {
     // Password Validation
     if (!formData.password) {
       newErrors.password = 'Login password is required';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(formData.password)) {
-      newErrors.password = 'Password must contain uppercase, lowercase, number, and special character';
+    } else {
+      // Check if password matches the account registration password
+      const storedAccounts = JSON.parse(localStorage.getItem('bankAccounts') || '[]');
+      const userAccount = storedAccounts.find(account => account.accountNumber === formData.accountNumber);
+      
+      if (!userAccount) {
+        newErrors.password = 'Account not found. Please contact support.';
+      } else if (formData.password !== userAccount.password) {
+        newErrors.password = 'Login password does not match your account registration password.';
+      } else if (formData.password.length < 8) {
+        newErrors.password = 'Password must be at least 8 characters';
+      } 
     }
 
     // Confirm Password Validation
@@ -208,7 +215,6 @@ export default function InternetBankingRegister() {
         <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <p>Loading...</p>
         </div>
-        <Footer />
       </>
     );
   }
@@ -221,7 +227,7 @@ export default function InternetBankingRegister() {
         <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <p>Please log in first</p>
         </div>
-        <Footer />
+        
       </>
     );
   }
@@ -233,9 +239,7 @@ export default function InternetBankingRegister() {
       <div className="internet-banking-page">
         <div className="internet-banking-container">
           <div className="internet-banking-header">
-            <div className="banking-icon-header">
-              <FaShieldAlt className="banking-badge" />
-            </div>
+           
             <h2>{isRegistered ? 'Update Internet Banking' : 'Register for Internet Banking'}</h2>
             <p>Set up secure passwords for online fund transfers</p>
           </div>
@@ -250,7 +254,7 @@ export default function InternetBankingRegister() {
 
               {successMessage && (
                 <div className="alert alert-success">
-                  <FaCheck className="alert-icon" />
+                  {/* <FaCheck className="alert-icon" /> */}
                   {successMessage}
                 </div>
               )}
@@ -261,7 +265,7 @@ export default function InternetBankingRegister() {
                 <div className="form-group">
                   <label htmlFor="accountNumber">Account Number</label>
                   <div className="input-wrapper">
-                    <FaUser className="input-icon" />
+                    {/* <FaUser className="input-icon" /> */}
                     <input
                       type="text"
                       id="accountNumber"
@@ -282,7 +286,7 @@ export default function InternetBankingRegister() {
                 <div className="form-group">
                   <label htmlFor="password">Login Password</label>
                   <div className="input-wrapper">
-                    <FaLock className="input-icon" />
+                    {/* <FaLock className="input-icon" /> */}
                     <input
                       type={showPassword ? 'text' : 'password'}
                       id="password"
@@ -307,7 +311,7 @@ export default function InternetBankingRegister() {
                 <div className="form-group">
                   <label htmlFor="confirmPassword">Confirm Login Password</label>
                   <div className="input-wrapper">
-                    <FaLock className="input-icon" />
+                    {/* <FaLock className="input-icon" /> */}
                     <input
                       type={showPassword ? 'text' : 'password'}
                       id="confirmPassword"
@@ -317,6 +321,13 @@ export default function InternetBankingRegister() {
                       className={`form-input ${errors.confirmPassword ? 'error' : ''}`}
                       placeholder="Confirm your password"
                     />
+                      <button
+                      type="button"
+                      className="toggle-password"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
                   </div>
                   {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
                 </div>
@@ -331,7 +342,7 @@ export default function InternetBankingRegister() {
                 <div className="form-group">
                   <label htmlFor="transactionPassword">Transaction Password</label>
                   <div className="input-wrapper">
-                    <FaLock className="input-icon" />
+                    {/* <FaLock className="input-icon" /> */}
                     <input
                       type={showTransactionPassword ? 'text' : 'password'}
                       id="transactionPassword"
@@ -356,7 +367,7 @@ export default function InternetBankingRegister() {
                 <div className="form-group">
                   <label htmlFor="confirmTransactionPassword">Confirm Transaction Password</label>
                   <div className="input-wrapper">
-                    <FaLock className="input-icon" />
+                    {/* <FaLock className="input-icon" /> */}
                     <input
                       type={showTransactionPassword ? 'text' : 'password'}
                       id="confirmTransactionPassword"
@@ -374,7 +385,7 @@ export default function InternetBankingRegister() {
               </div>
 
               <div className="security-info">
-                <FaShieldAlt className="security-icon" />
+                {/* <FaShieldAlt className="security-icon" /> */}
                 <div>
                   <h4>Security Note</h4>
                   <ul>
@@ -398,7 +409,6 @@ export default function InternetBankingRegister() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

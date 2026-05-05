@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 import Breadcrumbs from '../Components/Breadcrumbs';
 
 export default function SavingsAccount() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem('currentUser');
+    setIsLoggedIn(!!user);
+  }, []);
+
   return (
     <>
       <Header />
@@ -18,8 +25,7 @@ export default function SavingsAccount() {
             {/* <p className="savings-breadcrumb">Personal Banking &gt; Accounts &gt; Savings Account</p> */}
             <h1>Savings Account — One Account, Endless Benefits</h1>
             <div className="savings-hero-links">
-              <Link to="/register" className="hero-btn hero-btn-primary">Get Started</Link>
-              <Link to="/login" className="hero-btn hero-btn-secondary">Manage Account</Link>
+              <Link to={isLoggedIn ? "/user-dashboard" : "/login"} className="hero-btn hero-btn-secondary">Manage Account</Link>
             </div>
           </div>
           <div className="savings-hero-image">

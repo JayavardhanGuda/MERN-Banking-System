@@ -57,7 +57,6 @@ export default function Login() {
           <div className="login-container">
             <div className="login-header">
               <div className="bank-logo">
-                <h2>PavitraBandham Cooperative Bank</h2>
                 <p>Secure Online Banking</p>
               </div>
               <div className="security-badge">
@@ -75,7 +74,7 @@ export default function Login() {
                 <div className="form-group">
                   <label htmlFor="username">Email / Customer ID</label>
                   <div className="input-group">
-                    <FaUser className="input-icon" />
+                    {/* <FaUser className="input-icon" /> */}
                     <input
                       type="text"
                       id="username"
@@ -91,7 +90,7 @@ export default function Login() {
                 <div className="form-group">
                   <label htmlFor="password">Password</label>
                   <div className="input-group">
-                    <FaLock className="input-icon" />
+                    {/* <FaLock className="input-icon" /> */}
                     <input
                       type={showPassword ? "text" : "password"}
                       id="password"
