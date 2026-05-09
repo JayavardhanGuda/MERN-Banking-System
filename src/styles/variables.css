@@ -1,19 +1,24 @@
 /* Color Variables */
 :root {
-  --primary-dark: #001f3f;
-  --primary-light: #003d66;
-  --accent: #17a2b8;
-  --accent-dark: #138496;
-  --text-dark: #333;
-  --text-light: #666;
-  --text-muted: #ddd;
-  --border-light: #e0e0e0;
-  --bg-light: #f5f7fa;
-  --bg-lighter: #f8f9fa;
-  --bg-card: #f0f2f5;
-  --white: white;
-  --error: #ff6b6b;
-  
+  /* Brand palette – deep navy + gold */
+  --primary-dark:   #0d1b3e;   /* deep navy */
+  --primary-mid:    #1a2f6b;   /* mid navy */
+  --primary-light:  #2a4494;   /* bright navy */
+  --accent:         #c9a84c;   /* rich gold */
+  --accent-dark:    #a8872e;   /* deep gold */
+  --accent-light:   #e8c96a;   /* light gold */
+  --accent-glow:    rgba(201,168,76,0.25);
+
+  --text-dark:      #1a1a2e;
+  --text-light:     #5a6480;
+  --text-muted:     #c8cfe0;
+  --border-light:   #dde3f0;
+  --bg-light:       #f4f6fb;
+  --bg-lighter:     #f9fafd;
+  --bg-card:        #eef1f8;
+  --white:          #ffffff;
+  --error:          #e05252;
+
   /* Spacing */
   --spacing-xs: 8px;
   --spacing-sm: 12px;
@@ -23,18 +28,18 @@
   --spacing-2xl: 40px;
   --spacing-3xl: 50px;
   --spacing-4xl: 60px;
-  
+
   /* Border Radius */
-  --radius-sm: 3px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 18px;
+
   /* Z-index */
   --z-overlay: 998;
   --z-sidebar: 999;
   --z-header: 1000;
-  
+
   /* Transitions */
   --transition-fast: 0.2s ease;
   --transition-base: 0.3s ease;

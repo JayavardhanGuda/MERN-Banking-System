@@ -1,15 +1,15 @@
 /* Breadcrumbs Styles */
 .breadcrumbs {
-  background-color: #f8f9fa;
+  background-color: var(--primary-dark, #0d1b3e);
   padding: 12px 0;
-  border-bottom: 1px solid #e9ecef;
-  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  margin-bottom: 0;
 }
 
 .breadcrumb-container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 32px;
   display: flex;
   align-items: center;
   font-size: 14px;
@@ -19,14 +19,14 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #007bff;
+  color: var(--accent, #c9a84c);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
 .breadcrumb-home:hover {
-  color: #0056b3;
+  color: var(--accent-light, #e8c96a);
 }
 
 .breadcrumb-home svg {
@@ -35,30 +35,30 @@
 
 .breadcrumb-separator {
   margin: 0 8px;
-  color: #6c757d;
+  color: rgba(255,255,255,0.3);
   font-size: 12px;
 }
 
 .breadcrumb-link {
-  color: #007bff;
+  color: var(--accent, #c9a84c);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
 .breadcrumb-link:hover {
-  color: #0056b3;
+  color: var(--accent-light, #e8c96a);
 }
 
 .breadcrumb-current {
-  color: #495057;
+  color: rgba(255,255,255,0.72);
   font-weight: 600;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .breadcrumb-container {
-    padding: 0 15px;
+    padding: 0 16px;
     font-size: 13px;
   }
 
