@@ -8,7 +8,8 @@ import {
   FaFileAlt, FaMapMarkerAlt, FaLock, FaEnvelope,
   FaPhone, FaCalendarAlt, FaVenusMars, FaUniversity,
   FaMoneyBillWave, FaShieldAlt, FaDownload,
-  FaFilePdf, FaFileImage, FaExternalLinkAlt
+  FaFilePdf, FaFileImage, FaExternalLinkAlt,
+  FaHistory, FaArrowUp, FaArrowDown, FaBox, FaKey
 } from 'react-icons/fa'
 import '../styles/AdminDashboard.css'
 
@@ -212,6 +213,303 @@ function ConfirmDialog({ action, account, onConfirm, onCancel }) {
 }
 
 /* ══════════════════════════════════════════════════════════
+   ACCOUNT DETAIL MODAL — tabbed for approved accounts
+══════════════════════════════════════════════════════════ */
+function AccountDetailModal({ account, onClose, onConfirm }) {
+  const [activeTab, setActiveTab] = useState('overview')
+
+  /* Fetch live data from localStorage */
+  const transactions = useMemo(() => {
+    const key = `transferHistory_${account.accountNumber}`
+    const raw = JSON.parse(localStorage.getItem(key) || '[]')
+    return raw.sort((a, b) => (b.id || 0) - (a.id || 0))
+  }, [account.accountNumber])
+
+  const lockerBookings = useMemo(() => {
+    const all = JSON.parse(localStorage.getItem('lockerBookings') || '[]')
+    return all.filter(b => b.accountNumber === account.accountNumber)
+  }, [account.accountNumber])
+
+  /* Tabs — extra tabs only for approved accounts */
+  const tabs = [
+    { key: 'overview',   label: 'Overview',          icon: <FaUsers /> },
+    ...(account.status === 'Approved' ? [
+      { key: 'statement', label: 'Account Statement', icon: <FaHistory /> },
+      { key: 'locker',    label: 'Locker Requests',   icon: <FaBox /> },
+    ] : []),
+    { key: 'kyc',        label: 'KYC Documents',      icon: <FaIdCard /> },
+  ]
+
+  return (
+    <div className="adm-modal-overlay" onClick={onClose}>
+      <div className="adm-modal adm-modal--tabbed" onClick={e => e.stopPropagation()}>
+
+        {/* ── Header ── */}
+        <div className="adm-modal__header">
+          <div className="adm-modal__avatar">
+            {(account.firstName?.[0] || '?').toUpperCase()}
+          </div>
+          <div className="adm-modal__header-info">
+            <h2 className="adm-modal__name">{account.firstName} {account.lastName}</h2>
+            <div className="adm-modal__header-meta">
+              <span className="adm-table__mono">{account.accountNumber}</span>
+              <StatusBadge status={account.status} />
+              <span className="adm-modal__applied">Applied {fmtDate(account.createdAt)}</span>
+            </div>
+          </div>
+          <button className="adm-modal__close" onClick={onClose} aria-label="Close">
+            <FaTimes />
+          </button>
+        </div>
+
+        {/* ── Tab bar ── */}
+        <div className="adm-modal__tabs">
+          {tabs.map(t => (
+            <button
+              key={t.key}
+              className={`adm-modal__tab${activeTab === t.key ? ' active' : ''}`}
+              onClick={() => setActiveTab(t.key)}
+            >
+              {t.icon} {t.label}
+            </button>
+          ))}
+        </div>
+
+        {/* ── Tab body ── */}
+        <div className="adm-modal__body">
+
+          {/* ── OVERVIEW ── */}
+          {activeTab === 'overview' && (
+            <>
+              <div className="adm-modal__row">
+                <div className="adm-modal__section">
+                  <div className="adm-modal__section-title"><FaUsers /> Personal Information</div>
+                  <div className="adm-info-grid">
+                    <InfoItem icon={<FaUsers />}       label="First Name"    value={account.firstName} />
+                    <InfoItem icon={<FaUsers />}       label="Last Name"     value={account.lastName} />
+                    <InfoItem icon={<FaEnvelope />}    label="Email"         value={account.email} />
+                    <InfoItem icon={<FaPhone />}       label="Phone"         value={account.phone} />
+                    <InfoItem icon={<FaCalendarAlt />} label="Date of Birth" value={fmtDate(account.dateOfBirth)} />
+                    <InfoItem icon={<FaCalendarAlt />} label="Age"           value={account.age ? `${account.age} years` : '—'} />
+                    <InfoItem icon={<FaVenusMars />}   label="Gender"        value={capitalize(account.gender)} />
+                  </div>
+                </div>
+                <div className="adm-modal__section">
+                  <div className="adm-modal__section-title"><FaUniversity /> Account Details</div>
+                  <div className="adm-info-grid">
+                    <InfoItem icon={<FaUniversity />}    label="Account Type"    value={capitalize(account.accountType)} />
+                    <InfoItem icon={<FaMoneyBillWave />} label="Initial Deposit" value={fmtMoney(account.initialDeposit)} />
+                    <InfoItem icon={<FaMoneyBillWave />} label="Current Balance" value={fmtMoney(account.balance)} />
+                    <InfoItem icon={<FaLock />}          label="Username"        value={account.username} />
+                    <InfoItem icon={<FaCalendarAlt />}   label="Applied On"      value={fmtDate(account.createdAt)} />
+                    {account.approvedAt && <InfoItem icon={<FaUserCheck />} label="Approved On" value={fmtDate(account.approvedAt)} />}
+                    {account.rejectedAt && <InfoItem icon={<FaUserTimes />} label="Rejected On" value={fmtDate(account.rejectedAt)} />}
+                  </div>
+                </div>
+              </div>
+              <div className="adm-modal__section adm-modal__section--full">
+                <div className="adm-modal__section-title"><FaMapMarkerAlt /> Address Information</div>
+                <div className="adm-info-grid adm-info-grid--4">
+                  <InfoItem icon={<FaMapMarkerAlt />} label="Address"  value={account.address} />
+                  <InfoItem icon={<FaMapMarkerAlt />} label="City"     value={account.city} />
+                  <InfoItem icon={<FaMapMarkerAlt />} label="State"    value={account.state} />
+                  <InfoItem icon={<FaMapMarkerAlt />} label="PIN Code" value={account.pincode} />
+                  <InfoItem icon={<FaMapMarkerAlt />} label="Country"  value={account.country} />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── ACCOUNT STATEMENT ── */}
+          {activeTab === 'statement' && (
+            <div className="adm-modal__section adm-modal__section--full">
+              <div className="adm-modal__section-title"><FaHistory /> Transaction History</div>
+
+              {/* Balance summary */}
+              <div className="adm-stmt-summary">
+                <div className="adm-stmt-summary__item">
+                  <div className="adm-stmt-summary__label">Current Balance</div>
+                  <div className="adm-stmt-summary__value adm-stmt-summary__value--gold">{fmtMoney(account.balance)}</div>
+                </div>
+                <div className="adm-stmt-summary__item">
+                  <div className="adm-stmt-summary__label">Total Transactions</div>
+                  <div className="adm-stmt-summary__value">{transactions.length}</div>
+                </div>
+                <div className="adm-stmt-summary__item">
+                  <div className="adm-stmt-summary__label">Total Credits</div>
+                  <div className="adm-stmt-summary__value adm-stmt-summary__value--green">
+                    {fmtMoney(transactions.filter(t => t.recipientAccount === account.accountNumber).reduce((s, t) => s + parseFloat(t.amount || 0), 0).toFixed(2))}
+                  </div>
+                </div>
+                <div className="adm-stmt-summary__item">
+                  <div className="adm-stmt-summary__label">Total Debits</div>
+                  <div className="adm-stmt-summary__value adm-stmt-summary__value--red">
+                    {fmtMoney(transactions.filter(t => t.senderAccount === account.accountNumber).reduce((s, t) => s + parseFloat(t.amount || 0), 0).toFixed(2))}
+                  </div>
+                </div>
+              </div>
+
+              {transactions.length === 0 ? (
+                <div className="adm-empty" style={{ padding: '40px 0' }}>
+                  <div className="adm-empty__icon"><FaHistory /></div>
+                  <p className="adm-empty__title">No transactions yet</p>
+                  <p className="adm-empty__sub">This account has not made any fund transfers.</p>
+                </div>
+              ) : (
+                <div className="adm-stmt-table-wrap">
+                  <table className="adm-stmt-table">
+                    <thead>
+                      <tr>
+                        <th>Date & Time</th>
+                        <th>Description</th>
+                        <th>Counterparty</th>
+                        <th>Amount</th>
+                        <th>Balance After</th>
+                        <th>Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {transactions.map((t, i) => {
+                        const isCredit = t.recipientAccount === account.accountNumber
+                        return (
+                          <tr key={t.id || i} className="adm-stmt-table__row">
+                            <td className="adm-stmt-table__date">
+                              <div>{t.date}</div>
+                              <div className="adm-stmt-table__time">{t.time}</div>
+                            </td>
+                            <td>{t.description || '—'}</td>
+                            <td>
+                              {isCredit
+                                ? <span>{t.senderName || t.senderAccount}</span>
+                                : <span>{t.recipientName || t.recipientAccount}</span>
+                              }
+                            </td>
+                            <td>
+                              <span className={`adm-stmt-table__amount ${isCredit ? 'adm-stmt-table__amount--credit' : 'adm-stmt-table__amount--debit'}`}>
+                                {isCredit ? <FaArrowDown /> : <FaArrowUp />}
+                                ₹{parseFloat(t.amount).toLocaleString('en-IN')}
+                              </span>
+                            </td>
+                            <td className="adm-stmt-table__balance">
+                              {t.balanceAfter ? `₹${parseFloat(t.balanceAfter).toLocaleString('en-IN')}` : '—'}
+                            </td>
+                            <td>
+                              <span className={`adm-badge ${isCredit ? 'adm-badge--approved' : 'adm-badge--pending'}`}>
+                                {isCredit ? 'Credit' : 'Debit'}
+                              </span>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── LOCKER REQUESTS ── */}
+          {activeTab === 'locker' && (
+            <div className="adm-modal__section adm-modal__section--full">
+              <div className="adm-modal__section-title"><FaBox /> Locker Booking Requests</div>
+
+              {lockerBookings.length === 0 ? (
+                <div className="adm-empty" style={{ padding: '40px 0' }}>
+                  <div className="adm-empty__icon"><FaBox /></div>
+                  <p className="adm-empty__title">No locker requests</p>
+                  <p className="adm-empty__sub">This account has not submitted any locker booking requests.</p>
+                </div>
+              ) : (
+                <div className="adm-locker-grid">
+                  {lockerBookings.map((b, i) => (
+                    <div key={b.id || i} className="adm-locker-card">
+                      <div className="adm-locker-card__header">
+                        <div className="adm-locker-card__icon"><FaBox /></div>
+                        <div>
+                          <div className="adm-locker-card__number">{b.lockerNumber}</div>
+                          <span className={`adm-badge ${b.status === 'Booked' ? 'adm-badge--approved' : 'adm-badge--pending'}`}>
+                            {b.status}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="adm-locker-card__rows">
+                        <div className="adm-locker-card__row">
+                          <span className="adm-locker-card__label">Locker Type</span>
+                          <span className="adm-locker-card__value">{b.lockerType}</span>
+                        </div>
+                        <div className="adm-locker-card__row">
+                          <span className="adm-locker-card__label">Booked On</span>
+                          <span className="adm-locker-card__value">{fmtDate(b.bookedOn)}</span>
+                        </div>
+                        <div className="adm-locker-card__row">
+                          <span className="adm-locker-card__label">Approx. Value</span>
+                          <span className="adm-locker-card__value adm-locker-card__value--gold">
+                            {fmtMoney(b.approximateValue)}
+                          </span>
+                        </div>
+                        <div className="adm-locker-card__row adm-locker-card__row--full">
+                          <span className="adm-locker-card__label">Item Details</span>
+                          <span className="adm-locker-card__value">{b.itemDetails || '—'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── KYC DOCUMENTS ── */}
+          {activeTab === 'kyc' && (
+            <div className="adm-modal__section adm-modal__section--full">
+              <div className="adm-modal__section-title"><FaIdCard /> KYC Documents</div>
+              {account.kyc ? (
+                <div className="adm-kyc-grid">
+                  <KycFileCard doc={account.kyc.panCard}     label="PAN Card" />
+                  <KycFileCard doc={account.kyc.aadhaarCard} label="Aadhaar Card" />
+                </div>
+              ) : (
+                <p className="adm-no-kyc">No KYC documents were submitted with this application.</p>
+              )}
+            </div>
+          )}
+
+        </div>
+
+        {/* ── Footer ── */}
+        <div className="adm-modal__footer">
+          {account.status === 'Pending' ? (
+            <>
+              <div className="adm-modal__footer-note">
+                <FaShieldAlt /> Review all details and KYC documents before taking action.
+              </div>
+              <div className="adm-modal__footer-actions">
+                <button className="adm-modal__btn adm-modal__btn--reject"
+                  onClick={() => onConfirm('Rejected')}>
+                  <FaTimes /> Reject Application
+                </button>
+                <button className="adm-modal__btn adm-modal__btn--approve"
+                  onClick={() => onConfirm('Approved')}>
+                  <FaCheck /> Approve Account
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className={`adm-modal__status-info ${account.status === 'Approved' ? 'adm-modal__status-info--green' : 'adm-modal__status-info--red'}`}>
+              {account.status === 'Approved'
+                ? <><FaUserCheck /> Account is <strong>active</strong>. Approved on {fmtDate(account.approvedAt)}.</>
+                : <><FaUserTimes /> Account was <strong>rejected</strong> on {fmtDate(account.rejectedAt)}.</>
+              }
+            </div>
+          )}
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════
    MAIN COMPONENT
 ══════════════════════════════════════════════════════════ */
 export default function AdminDashboard() {
@@ -297,7 +595,7 @@ export default function AdminDashboard() {
               <div className="adm-sidebar__brand-icon"><FaShieldAlt /></div>
               <div>
                 <div className="adm-sidebar__brand-name">Admin Panel</div>
-                <div className="adm-sidebar__brand-sub">PavitraBandham Bank</div>
+                <div className="adm-sidebar__brand-sub">VJN Bank</div>
               </div>
             </div>
 
@@ -413,123 +711,11 @@ export default function AdminDashboard() {
           FULL-SCREEN DETAIL MODAL (centered, wide)
       ══════════════════════════════════════════════════════ */}
       {selected && (
-        <div className="adm-modal-overlay" onClick={() => setSelected(null)}>
-          <div className="adm-modal" onClick={e => e.stopPropagation()}>
-
-            {/* ── Modal header ── */}
-            <div className="adm-modal__header">
-              <div className="adm-modal__avatar">
-                {(selected.firstName?.[0] || '?').toUpperCase()}
-              </div>
-              <div className="adm-modal__header-info">
-                <h2 className="adm-modal__name">{selected.firstName} {selected.lastName}</h2>
-                <div className="adm-modal__header-meta">
-                  <span className="adm-table__mono">{selected.accountNumber}</span>
-                  <StatusBadge status={selected.status} />
-                  <span className="adm-modal__applied">Applied {fmtDate(selected.createdAt)}</span>
-                </div>
-              </div>
-              <button className="adm-modal__close" onClick={() => setSelected(null)} aria-label="Close">
-                <FaTimes />
-              </button>
-            </div>
-
-            {/* ── Modal body ── */}
-            <div className="adm-modal__body">
-
-              {/* Row 1: Personal + Account */}
-              <div className="adm-modal__row">
-
-                {/* Personal Information */}
-                <div className="adm-modal__section">
-                  <div className="adm-modal__section-title"><FaUsers /> Personal Information</div>
-                  <div className="adm-info-grid">
-                    <InfoItem icon={<FaUsers />}       label="First Name"    value={selected.firstName} />
-                    <InfoItem icon={<FaUsers />}       label="Last Name"     value={selected.lastName} />
-                    <InfoItem icon={<FaEnvelope />}    label="Email"         value={selected.email} />
-                    <InfoItem icon={<FaPhone />}       label="Phone"         value={selected.phone} />
-                    <InfoItem icon={<FaCalendarAlt />} label="Date of Birth" value={fmtDate(selected.dateOfBirth)} />
-                    <InfoItem icon={<FaCalendarAlt />} label="Age"           value={selected.age ? `${selected.age} years` : '—'} />
-                    <InfoItem icon={<FaVenusMars />}   label="Gender"        value={capitalize(selected.gender)} />
-                  </div>
-                </div>
-
-                {/* Account Details */}
-                <div className="adm-modal__section">
-                  <div className="adm-modal__section-title"><FaUniversity /> Account Details</div>
-                  <div className="adm-info-grid">
-                    <InfoItem icon={<FaUniversity />}    label="Account Type"    value={capitalize(selected.accountType)} />
-                    <InfoItem icon={<FaMoneyBillWave />} label="Initial Deposit" value={fmtMoney(selected.initialDeposit)} />
-                    <InfoItem icon={<FaMoneyBillWave />} label="Balance"         value={fmtMoney(selected.balance)} />
-                    <InfoItem icon={<FaLock />}          label="Username"        value={selected.username} />
-                    <InfoItem icon={<FaCalendarAlt />}   label="Applied On"      value={fmtDate(selected.createdAt)} />
-                    {selected.approvedAt && <InfoItem icon={<FaUserCheck />} label="Approved On" value={fmtDate(selected.approvedAt)} />}
-                    {selected.rejectedAt && <InfoItem icon={<FaUserTimes />} label="Rejected On" value={fmtDate(selected.rejectedAt)} />}
-                  </div>
-                </div>
-              </div>
-
-              {/* Row 2: Address */}
-              <div className="adm-modal__section adm-modal__section--full">
-                <div className="adm-modal__section-title"><FaMapMarkerAlt /> Address Information</div>
-                <div className="adm-info-grid adm-info-grid--4">
-                  <InfoItem icon={<FaMapMarkerAlt />} label="Address"  value={selected.address} />
-                  <InfoItem icon={<FaMapMarkerAlt />} label="City"     value={selected.city} />
-                  <InfoItem icon={<FaMapMarkerAlt />} label="State"    value={selected.state} />
-                  <InfoItem icon={<FaMapMarkerAlt />} label="PIN Code" value={selected.pincode} />
-                  <InfoItem icon={<FaMapMarkerAlt />} label="Country"  value={selected.country} />
-                </div>
-              </div>
-
-              {/* Row 3: KYC Documents — full width, side by side */}
-              <div className="adm-modal__section adm-modal__section--full">
-                <div className="adm-modal__section-title"><FaIdCard /> KYC Documents for Verification</div>
-                {selected.kyc ? (
-                  <div className="adm-kyc-grid">
-                    <KycFileCard doc={selected.kyc.panCard}     label="PAN Card" />
-                    <KycFileCard doc={selected.kyc.aadhaarCard} label="Aadhaar Card" />
-                  </div>
-                ) : (
-                  <p className="adm-no-kyc">No KYC documents were submitted with this application.</p>
-                )}
-              </div>
-
-            </div>
-
-            {/* ── Modal footer ── */}
-            <div className="adm-modal__footer">
-              {selected.status === 'Pending' ? (
-                <>
-                  <div className="adm-modal__footer-note">
-                    <FaShieldAlt /> Review all details and KYC documents before taking action.
-                  </div>
-                  <div className="adm-modal__footer-actions">
-                    <button
-                      className="adm-modal__btn adm-modal__btn--reject"
-                      onClick={() => setConfirm({ action: 'Rejected', account: selected })}
-                    >
-                      <FaTimes /> Reject Application
-                    </button>
-                    <button
-                      className="adm-modal__btn adm-modal__btn--approve"
-                      onClick={() => setConfirm({ action: 'Approved', account: selected })}
-                    >
-                      <FaCheck /> Approve Account
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className={`adm-modal__status-info ${selected.status === 'Approved' ? 'adm-modal__status-info--green' : 'adm-modal__status-info--red'}`}>
-                  {selected.status === 'Approved'
-                    ? <><FaUserCheck /> Account is <strong>active</strong>. Approved on {fmtDate(selected.approvedAt)}.</>
-                    : <><FaUserTimes /> Account was <strong>rejected</strong> on {fmtDate(selected.rejectedAt)}.</>
-                  }
-                </div>
-              )}
-            </div>
-
-          </div>
-        </div>
+        <AccountDetailModal
+          account={selected}
+          onClose={() => setSelected(null)}
+          onConfirm={(action) => setConfirm({ action, account: selected })}
+        />
       )}
 
       {/* ── Confirm dialog ── */}

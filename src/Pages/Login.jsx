@@ -106,7 +106,7 @@ export default function Login() {
         {/* ── Left decorative strip ── */}
         <div className="lm-card__strip">
           <span className="lm-card__strip-icon">🏛</span>
-          <div className="lm-card__strip-name">PavitraBandham<br />Cooperative Bank</div>
+          <div className="lm-card__strip-name">VJN<br />Cooperative Bank</div>
           <div className="lm-card__strip-tagline">Empowering trust, enabling growth</div>
 
           <div className="lm-card__strip-features">

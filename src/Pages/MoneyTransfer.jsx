@@ -436,7 +436,7 @@ const MoneyTransfer = () => {
         <body>
           <div class="receipt-container">
             <div class="header">
-              <h1>PavitraBandham Cooperative Bank</h1>
+              <h1>VJN Cooperative Bank</h1>
               <p>Fund Transfer Receipt</p>
             </div>
 
@@ -509,7 +509,7 @@ const MoneyTransfer = () => {
             <div class="footer">
               <p>This is a computer-generated receipt. No signature is required.</p>
               <p>For security, please keep this receipt confidential.</p>
-              <p>© 2026 PavitraBandham Cooperative Bank. All rights reserved.</p>
+              <p>© 2026 VJN Cooperative Bank. All rights reserved.</p>
             </div>
           </div>
         </body>

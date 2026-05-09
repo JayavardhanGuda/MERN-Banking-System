@@ -125,7 +125,7 @@ export default function ResetPassword() {
         <div className="lm-card__strip">
           <span className="lm-card__strip-icon">🔒</span>
           <div className="lm-card__strip-name">Set New Password</div>
-          <div className="lm-card__strip-tagline">PavitraBandham Cooperative Bank</div>
+          <div className="lm-card__strip-tagline">VJN Cooperative Bank</div>
 
           <div className="lm-card__strip-features">
             {[

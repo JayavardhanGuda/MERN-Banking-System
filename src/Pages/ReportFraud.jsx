@@ -36,7 +36,7 @@ const REPORT_CHANNELS = [
   },
   {
     icon: <FaPhoneAlt />,
-    title: 'PavitraBandham Bank Helpline',
+    title: 'VJN Bank Helpline',
     detail: '1800-XXX-XXXX',
     sub: 'Toll-free · Mon–Sat, 9 AM – 6 PM',
     type: 'phone',
@@ -44,10 +44,10 @@ const REPORT_CHANNELS = [
   {
     icon: <FaEnvelope />,
     title: 'Email Fraud Reporting',
-    detail: 'fraud@pavitrabandhambank.com',
+    detail: 'fraud@vjnbank.com',
     sub: 'Send evidence of phishing or suspicious activity',
     type: 'email',
-    href: 'mailto:fraud@pavitrabandhambank.com',
+    href: 'mailto:fraud@vjnbank.com',
   },
 ];
 
@@ -76,7 +76,7 @@ export default function ReportFraud() {
             </div>
             <h1 className="rf-hero__title">Fraud Awareness &amp; Reporting</h1>
             <p className="rf-hero__desc">
-              PavitraBandham Cooperative Bank is committed to keeping your money safe.
+              VJN Cooperative Bank is committed to keeping your money safe.
               Learn how to identify fraud, protect yourself, and report suspicious activity immediately.
             </p>
             <div className="rf-hero__actions">
@@ -166,7 +166,7 @@ export default function ReportFraud() {
               <div>
                 <strong>Report Immediately:</strong> The sooner you report an unauthorised transaction,
                 the higher the chance of recovery. Delays increase the risk of permanent loss.
-                PavitraBandham Bank will never ask for your OTP, PIN, or password over phone or email.
+                VJN Bank will never ask for your OTP, PIN, or password over phone or email.
               </div>
             </div>
           </div>

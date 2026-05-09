@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import {
@@ -11,6 +11,81 @@ import {
 } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import '../styles/Home.css'
+
+/* ── Count-up hook ── */
+function useCountUp(target, duration = 1200, started = false) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!started) return;
+    let startTime = null;
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+      else setCount(target);
+    };
+    requestAnimationFrame(step);
+  }, [started, target, duration]);
+  return count;
+}
+
+/* ── Stats strip with animated counters ── */
+const STATS = [
+  { target: 38,    prefix: '',  suffix: '+',   label: 'Years of Service',         duration: 1000 },
+  { target: 700,   prefix: '',  suffix: 'K+',  label: 'Happy Customers',          duration: 1200 },
+  { target: 500,   prefix: '₹', suffix: 'Cr+', label: 'Assets Under Management',  duration: 1400 },
+  { target: 99.9,  prefix: '',  suffix: '%',   label: 'Uptime Guarantee',         duration: 1100, decimal: true },
+];
+
+function StatItem({ stat, started }) {
+  const raw = useCountUp(
+    stat.decimal ? Math.round(stat.target * 10) : stat.target,
+    stat.duration,
+    started
+  );
+  const display = stat.decimal ? (raw / 10).toFixed(1) : raw;
+  return (
+    <div className="home-stats__item">
+      <div className="home-stats__value">
+        {stat.prefix}{display}{stat.suffix}
+      </div>
+      <div className="home-stats__label">{stat.label}</div>
+    </div>
+  );
+}
+
+function StatsStrip() {
+  const ref = useRef(null);
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setStarted(true); observer.disconnect(); } },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section className="home-stats" ref={ref}>
+      <div className="container">
+        <div className="row g-0">
+          {STATS.map((s, i) => (
+            <div key={i} className="col-6 col-md-3">
+              <StatItem stat={s} started={started} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -112,25 +187,7 @@ export default function Home() {
         </section>
 
         {/* ── STATS STRIP ── */}
-        <section className="home-stats">
-          <div className="container">
-            <div className="row g-0">
-              {[
-                { value: '10+', label: 'Years of Service' },
-                { value: '1L+', label: 'Happy Customers' },
-                { value: '₹500Cr+', label: 'Assets Under Management' },
-                { value: '99.9%', label: 'Uptime Guarantee' },
-              ].map((s, i) => (
-                <div key={i} className="col-6 col-md-3">
-                  <div className="home-stats__item">
-                    <div className="home-stats__value">{s.value}</div>
-                    <div className="home-stats__label">{s.label}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <StatsStrip />
 
         {/* ── QUICK SERVICES ── */}
         <section id="services" className="home-services py-5">

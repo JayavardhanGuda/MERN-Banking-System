@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import ScrollToTop from './Components/ScrollToTop'
+import PageLoader from './Components/PageLoader'
 import Home from './Pages/Home'
 import Register from './Pages/SavingsAccountRegister'
 import SavingsAccount from './Pages/SavingsAccount'
@@ -64,6 +65,7 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <PageLoader />
       <AppRoutes />
     </BrowserRouter>
   )

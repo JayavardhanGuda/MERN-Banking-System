@@ -97,7 +97,7 @@ export default function SavingsAccount() {
           <div className="container sa-hero__content">
             <div className="row align-items-center">
               <div className="col-lg-7">
-                <span className="sa-eyebrow">PavitraBandham Cooperative Bank</span>
+                <span className="sa-eyebrow">VJN Cooperative Bank</span>
                 <h1 className="sa-hero__title">
                   Savings Account —<br />
                   <span className="sa-hero__title-gold">Grow Every Rupee You Save</span>
@@ -332,7 +332,7 @@ export default function SavingsAccount() {
           <div className="container text-center">
             <h2 className="sa-cta__title">Ready to Open Your Savings Account?</h2>
             <p className="sa-cta__sub">
-              Join thousands of customers who trust PavitraBandham for their savings.
+              Join thousands of customers who trust VJN for their savings.
               Open your account online in minutes — no branch visit required.
             </p>
             <div className="d-flex gap-3 justify-content-center flex-wrap">

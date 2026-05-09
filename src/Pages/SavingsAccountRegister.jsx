@@ -87,7 +87,7 @@ export default function Register() {
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', phone: '',
     dateOfBirth: '', gender: '',
-    accountType: '', initialDeposit: '', currency: 'INR',
+    accountType: 'savings', initialDeposit: '', currency: 'INR',
     address: '', city: '', state: '', pincode: '', country: 'India',
     username: '', password: '', confirmPassword: '',
     securityQuestion: '', securityAnswer: '',
@@ -129,7 +129,6 @@ export default function Register() {
     if (!formData.gender) newErrors.gender = 'Gender is required';
 
     // Account
-    if (!formData.accountType) newErrors.accountType = 'Account type is required';
     if (!formData.initialDeposit || Number(formData.initialDeposit) < 1000)
       newErrors.initialDeposit = 'Minimum initial deposit is ₹1,000';
 
@@ -389,28 +388,13 @@ export default function Register() {
                 {/* ── Account Information ── */}
                 <div className="form-section">
                   <h3>Account Information</h3>
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label htmlFor="accountType">Account Type *</label>
-                      <select id="accountType" name="accountType"
-                        value={formData.accountType} onChange={handleInputChange}
-                        className={errors.accountType ? 'error' : ''}>
-                        <option value="">Select Account Type</option>
-                        <option value="savings">Savings Account</option>
-                        <option value="current">Current Account</option>
-                        <option value="salary">Salary Account</option>
-                        <option value="fixed">Fixed Deposit</option>
-                      </select>
-                      {errors.accountType && <span className="error-message">{errors.accountType}</span>}
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="initialDeposit">Initial Deposit (₹) *</label>
-                      <input type="number" id="initialDeposit" name="initialDeposit"
-                        value={formData.initialDeposit} onChange={handleInputChange}
-                        min="1000" step="100" placeholder="Minimum ₹1,000"
-                        className={errors.initialDeposit ? 'error' : ''} />
-                      {errors.initialDeposit && <span className="error-message">{errors.initialDeposit}</span>}
-                    </div>
+                  <div className="form-group">
+                    <label htmlFor="initialDeposit">Initial Deposit (₹) *</label>
+                    <input type="number" id="initialDeposit" name="initialDeposit"
+                      value={formData.initialDeposit} onChange={handleInputChange}
+                      min="1000" step="100" placeholder="Minimum ₹1,000"
+                      className={errors.initialDeposit ? 'error' : ''} />
+                    {errors.initialDeposit && <span className="error-message">{errors.initialDeposit}</span>}
                   </div>
                 </div>
 
