@@ -36,7 +36,7 @@
 
 /* ── BREADCRUMBS override ── */
 .breadcrumbs {
-  margin-top: 72px;
+  margin-top: 0;
   background: var(--primary-dark);
   border-bottom: 1px solid rgba(201,168,76,0.25);
   padding: 12px 0;

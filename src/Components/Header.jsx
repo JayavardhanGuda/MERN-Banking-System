@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FaUser, FaPiggyBank, FaCreditCard, FaShieldAlt } from "react-icons/fa";
+import { FaUser, FaPiggyBank, FaCreditCard, FaShieldAlt, FaClipboardList } from "react-icons/fa";
 import "../styles/Header.css";
 
 export default function Header() {
@@ -72,7 +72,7 @@ export default function Header() {
         {/* Logo */}
         <Link to="/" className="logo-link">
           <div className="logo">
-            <h2>PavitraBandham Cooperative Bank</h2>
+            <h2>VJN Cooperative Bank</h2>
             <p>Empowering trust, enabling growth</p>
           </div>
         </Link>
@@ -160,6 +160,16 @@ export default function Header() {
                         onClick={() => setShowProfileMenu(false)}
                       >
                         Register as New User
+                      </Link>
+                      <div className="profile-dropdown-divider" />
+                      <Link
+                        to="/application-status"
+                        state={{ backgroundLocation: location }}
+                        className="profile-menu-link profile-menu-link--status"
+                        onClick={() => setShowProfileMenu(false)}
+                      >
+                        <FaClipboardList className="profile-menu-link__icon" />
+                        Check Application Status
                       </Link>
                     </>
                   )}

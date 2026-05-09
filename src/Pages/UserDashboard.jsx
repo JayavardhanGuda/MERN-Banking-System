@@ -1,13 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import Breadcrumbs from '../Components/Breadcrumbs'
 import MoneyTransfer from './MoneyTransfer'
+import ServiceRequest from './ServiceRequest'
+import SmartLock from './SmartLock'
 import { isInternetBankingEnabled } from '../internetBankingUtils'
+import {
+  FaUser, FaChartBar, FaExchangeAlt, FaFileAlt,
+  FaWallet, FaShoppingCart, FaClock, FaUniversity,
+  FaEnvelope, FaPhone, FaMapMarkerAlt, FaIdCard,
+  FaClipboardList, FaLock
+} from 'react-icons/fa'
 import '../styles/Dashboard.css'
 
 export default function UserDashboard() {
-  const [activeSection, setActiveSection] = useState('details')
+  const location = useLocation()
+  const [activeSection, setActiveSection] = useState(
+    location.state?.openTransfer ? 'transfer' : 'details'
+  )
   const [currentUser, setCurrentUser] = useState(null)
   const [transactions, setTransactions] = useState([])
   const transactionData = [
@@ -53,16 +65,16 @@ export default function UserDashboard() {
         return (
           <>
             <div className="dashboard-card-grid">
-              <div className="dashboard-card">
-                <h3>Available Balance</h3>
+              <div className="dashboard-card balance-card">
+                <h3><FaWallet style={{ marginRight: 6 }} />Available Balance</h3>
                 <p>₹{currentUser && currentUser.balance ? parseFloat(currentUser.balance).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00'}</p>
               </div>
               <div className="dashboard-card">
-                <h3>Monthly Spending</h3>
+                <h3><FaShoppingCart style={{ marginRight: 6 }} />Monthly Spending</h3>
                 <p>₹32,450.00</p>
               </div>
               <div className="dashboard-card">
-                <h3>Pending Payments</h3>
+                <h3><FaClock style={{ marginRight: 6 }} />Pending Payments</h3>
                 <p>₹4,250.00</p>
               </div>
             </div>
@@ -71,6 +83,10 @@ export default function UserDashboard() {
         )
       case 'transfer':
         return <MoneyTransfer />
+      case 'service':
+        return <ServiceRequest embedded />
+      case 'smartlock':
+        return <SmartLock embedded />
       case 'statement':
         return (
           <>
@@ -91,18 +107,45 @@ export default function UserDashboard() {
                       <tr key={item.id || index}>
                         <td>{formatDate(item.date)}</td>
                         <td>{isCredit ? `Transfer from ${item.senderName} - ${item.description}` : `Transfer to ${item.recipientName} - ${item.description}`}</td>
-                        <td>{isCredit ? `+₹${item.amount}` : `-₹${item.amount}`}</td>
-                        <td>{isCredit ? 'Credited' : 'Debited'}</td>
+                        <td style={{ color: isCredit ? '#15803d' : '#b91c1c', fontWeight: 700 }}>{isCredit ? `+₹${item.amount}` : `-₹${item.amount}`}</td>
+                        <td>
+                          <span style={{
+                            display: 'inline-block',
+                            padding: '3px 10px',
+                            borderRadius: '20px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            background: isCredit ? '#dcfce7' : '#fee2e2',
+                            color: isCredit ? '#15803d' : '#b91c1c'
+                          }}>
+                            {isCredit ? 'Credited' : 'Debited'}
+                          </span>
+                        </td>
                       </tr>
                     );
-                  }) : transactionData.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.date}</td>
-                      <td>{item.description}</td>
-                      <td>{item.amount}</td>
-                      <td>{item.status}</td>
-                    </tr>
-                  ))}
+                  }) : transactionData.map((item, index) => {
+                    const isCredit = item.status === 'Credited';
+                    return (
+                      <tr key={index}>
+                        <td>{item.date}</td>
+                        <td>{item.description}</td>
+                        <td style={{ color: isCredit ? '#15803d' : '#b91c1c', fontWeight: 700 }}>{item.amount}</td>
+                        <td>
+                          <span style={{
+                            display: 'inline-block',
+                            padding: '3px 10px',
+                            borderRadius: '20px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            background: isCredit ? '#dcfce7' : '#fee2e2',
+                            color: isCredit ? '#15803d' : '#b91c1c'
+                          }}>
+                            {item.status}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -172,28 +215,42 @@ export default function UserDashboard() {
               type="button"
               onClick={() => setActiveSection('details')}
             >
-              Account Details
+              <FaIdCard /> Account Details
             </button>
             <button
               className={`sidebar-item ${activeSection === 'summary' ? 'active' : ''}`}
               type="button"
               onClick={() => setActiveSection('summary')}
             >
-              Account Summary
+              <FaChartBar /> Account Summary
             </button>
             <button
               className={`sidebar-item ${activeSection === 'transfer' ? 'active' : ''}`}
               type="button"
               onClick={() => setActiveSection('transfer')}
             >
-              Funds Transfer
+              <FaExchangeAlt /> Funds Transfer
             </button>
             <button
               className={`sidebar-item ${activeSection === 'statement' ? 'active' : ''}`}
               type="button"
               onClick={() => setActiveSection('statement')}
             >
-              Account Statement
+              <FaFileAlt /> Account Statement
+            </button>
+            <button
+              className={`sidebar-item ${activeSection === 'service' ? 'active' : ''}`}
+              type="button"
+              onClick={() => setActiveSection('service')}
+            >
+              <FaClipboardList /> Service Request
+            </button>
+            <button
+              className={`sidebar-item ${activeSection === 'smartlock' ? 'active' : ''}`}
+              type="button"
+              onClick={() => setActiveSection('smartlock')}
+            >
+              <FaLock /> Smart Lock
             </button>
           </aside>
           <section className="dashboard-content">
@@ -202,13 +259,12 @@ export default function UserDashboard() {
                 <div>
                   <p className="dashboard-panel-subtitle">Dashboard</p>
                   <h1>{
-                    activeSection === 'details'
-                      ? 'Account Details'
-                      : activeSection === 'summary'
-                      ? 'Account Summary'
-                      : activeSection === 'transfer'
-                      ? 'Funds Transfer'
-                      : 'Account Statement'
+                    activeSection === 'details'   ? 'Account Details'    :
+                    activeSection === 'summary'   ? 'Account Summary'    :
+                    activeSection === 'transfer'  ? 'Funds Transfer'     :
+                    activeSection === 'statement' ? 'Account Statement'  :
+                    activeSection === 'service'   ? 'Service Request'    :
+                    activeSection === 'smartlock' ? 'Smart Lock'         : ''
                   }</h1>
                 </div>
               </div>

@@ -8,13 +8,13 @@ export default function Footer() {
 
         {/* Brand */}
         <div className="footer-section">
-          <div className="footer-brand-name">PavitraBandham Cooperative Bank</div>
+          <div className="footer-brand-name">VJN Cooperative Bank</div>
           <div className="footer-brand-tagline">Empowering trust, enabling growth</div>
           <p className="footer-brand-desc">
             A trusted cooperative bank serving individuals and businesses with
             integrity, innovation, and a commitment to your financial well-being.
           </p>
-          <p className="footer-copyright">© 2026 PavitraBandham Cooperative Bank. All rights reserved.</p>
+          <p className="footer-copyright">© 2026 VJN Cooperative Bank. All rights reserved.</p>
         </div>
 
         {/* Quick Links */}
@@ -43,7 +43,7 @@ export default function Footer() {
             </li>
             <li>
               <FaEnvelope />
-              <span>support@pavitrabandhambank.com</span>
+              <span>support@vjnbank.com</span>
             </li>
           </ul>
         </div>

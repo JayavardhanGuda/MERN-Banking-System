@@ -722,37 +722,114 @@
 }
 
 /* Preview area */
-.adm-kyc-card__preview {
-  background: #f8f9fa;
+.adm-kyc-card__preview-wrap {
+  background: #f1f3f6;
   border-bottom: 1px solid var(--border-light);
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Image preview */
+.adm-kyc-card__img-wrap {
+  position: relative;
+  cursor: zoom-in;
+  overflow: hidden;
+  min-height: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 200px;
-  max-height: 280px;
-  overflow: hidden;
+  background: #f1f3f6;
 }
 
 .adm-kyc-card__img {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
   max-height: 280px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.25s ease;
 }
 
-.adm-kyc-card__pdf-placeholder {
+.adm-kyc-card__img-wrap:hover .adm-kyc-card__img {
+  transform: scale(1.03);
+}
+
+.adm-kyc-card__img-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(13,27,62,0.75));
+  color: rgba(255,255,255,0.9);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 20px 14px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.adm-kyc-card__img-wrap:hover .adm-kyc-card__img-overlay {
+  opacity: 1;
+}
+
+/* PDF iframe */
+.adm-kyc-card__pdf-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-kyc-card__pdf-iframe {
+  width: 100%;
+  height: 320px;
+  border: none;
+  display: block;
+  background: #fff;
+}
+
+.adm-kyc-card__pdf-note {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.75rem;
+  color: var(--text-light);
+  padding: 8px 14px;
+  background: #fafafa;
+  border-top: 1px solid var(--border-light);
+}
+
+.adm-kyc-card__pdf-note svg { color: #dc2626; }
+
+/* No data / unsupported */
+.adm-kyc-card__no-data {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  color: var(--text-light);
-  font-size: 0.85rem;
-  padding: 32px;
+  justify-content: center;
+  gap: 8px;
+  padding: 36px 20px;
+  text-align: center;
+  min-height: 180px;
 }
 
-.adm-kyc-card__pdf-icon {
-  font-size: 3rem;
-  color: #dc2626;
+.adm-kyc-card__no-data-icon {
+  font-size: 2.2rem;
+  color: var(--border-light);
+}
+
+.adm-kyc-card__no-data-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.adm-kyc-card__no-data-sub {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  line-height: 1.55;
+  max-width: 260px;
+  margin: 0;
 }
 
 /* Action buttons */
@@ -760,16 +837,18 @@
   display: flex;
   gap: 8px;
   padding: 12px 14px;
+  flex-wrap: wrap;
 }
 
 .adm-kyc-card__btn {
   flex: 1;
+  min-width: 110px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 8px 12px;
-  border-radius: 7px;
+  padding: 9px 14px;
+  border-radius: 8px;
   font-size: 0.78rem;
   font-weight: 700;
   text-decoration: none;
@@ -778,6 +857,7 @@
   border: 1px solid var(--border-light);
   transition: all 0.2s ease;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .adm-kyc-card__btn:hover {
@@ -795,13 +875,80 @@
 .adm-kyc-card__btn--dl:hover {
   background: var(--accent-light);
   color: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(201,168,76,0.3);
 }
 
-.adm-no-kyc {
+.adm-kyc-card__btn--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Lightbox ── */
+.adm-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  background: rgba(5, 10, 25, 0.92);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
-  font-size: 0.88rem;
-  color: var(--text-light);
-  font-style: italic;
+  animation: admOverlayIn 0.2s ease forwards;
+  cursor: zoom-out;
+}
+
+.adm-lightbox__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.85);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.adm-lightbox__close:hover {
+  background: rgba(255,255,255,0.22);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.adm-lightbox__label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.adm-lightbox__img {
+  max-width: 90vw;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+  cursor: default;
+  animation: admModalIn 0.3s cubic-bezier(0.34, 1.1, 0.64, 1) forwards;
+}
+
+.adm-lightbox__hint {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 14px;
+  text-align: center;
 }
 
 /* ── Modal footer ── */

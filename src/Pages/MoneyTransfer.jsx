@@ -52,11 +52,11 @@ const MoneyTransfer = () => {
         const bankingData = localStorage.getItem(`internetBanking_${userData.accountNumber}`);
         setIsRegistered(!!bankingData);
       } else {
-        navigate('/user-login');
+        navigate('/login');
       }
     } catch (error) {
       console.error('Error retrieving user data:', error);
-      navigate('/user-login');
+      navigate('/login');
     } finally {
       setLoading(false);
     }

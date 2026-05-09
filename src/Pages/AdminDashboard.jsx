@@ -30,6 +30,8 @@ function StatusBadge({ status }) {
 
 /* ── KYC file preview card ── */
 function KycFileCard({ doc, label }) {
+  const [zoomed, setZoomed] = useState(false)
+
   if (!doc) return (
     <div className="adm-kyc-card adm-kyc-card--empty">
       <FaFileAlt className="adm-kyc-card__empty-icon" />
@@ -39,64 +41,130 @@ function KycFileCard({ doc, label }) {
 
   const isPdf = doc.fileType === 'application/pdf'
   const isImg = doc.fileType?.startsWith('image/')
+  const hasData = !!doc.fileData
 
   return (
-    <div className="adm-kyc-card">
-      <div className="adm-kyc-card__header">
-        {isPdf ? <FaFilePdf className="adm-kyc-card__type-icon adm-kyc-card__type-icon--pdf" />
-                : <FaFileImage className="adm-kyc-card__type-icon adm-kyc-card__type-icon--img" />}
-        <div className="adm-kyc-card__meta-block">
-          <div className="adm-kyc-card__title">{label}</div>
-          <div className="adm-kyc-card__filename">{doc.fileName}</div>
-          <div className="adm-kyc-card__size">
-            {doc.fileSize ? `${(doc.fileSize / 1024).toFixed(1)} KB` : ''} · Uploaded {fmtDate(doc.uploadedAt)}
+    <>
+      <div className="adm-kyc-card">
+        {/* ── Header row ── */}
+        <div className="adm-kyc-card__header">
+          {isPdf
+            ? <FaFilePdf    className="adm-kyc-card__type-icon adm-kyc-card__type-icon--pdf" />
+            : <FaFileImage  className="adm-kyc-card__type-icon adm-kyc-card__type-icon--img" />
+          }
+          <div className="adm-kyc-card__meta-block">
+            <div className="adm-kyc-card__title">{label}</div>
+            <div className="adm-kyc-card__filename" title={doc.fileName}>{doc.fileName}</div>
+            <div className="adm-kyc-card__size">
+              {doc.fileSize ? `${(doc.fileSize / 1024).toFixed(1)} KB` : ''}
+              {doc.uploadedAt ? ` · Uploaded ${fmtDate(doc.uploadedAt)}` : ''}
+            </div>
           </div>
+          {doc.verified
+            ? <span className="adm-badge adm-badge--approved" style={{ marginLeft: 'auto', flexShrink: 0 }}>
+                <FaCheck style={{ marginRight: 4 }} />Verified
+              </span>
+            : <span className="adm-badge adm-badge--pending" style={{ marginLeft: 'auto', flexShrink: 0 }}>
+                <FaClock style={{ marginRight: 4 }} />Pending
+              </span>
+          }
         </div>
-        {doc.verified
-          ? <span className="adm-badge adm-badge--approved" style={{ marginLeft: 'auto', flexShrink: 0 }}><FaCheck style={{ marginRight: 4 }} />Verified</span>
-          : <span className="adm-badge adm-badge--pending"  style={{ marginLeft: 'auto', flexShrink: 0 }}><FaClock style={{ marginRight: 4 }} />Pending</span>
-        }
+
+        {/* ── Preview area ── */}
+        <div className="adm-kyc-card__preview-wrap">
+          {!hasData ? (
+            /* File data not stored — old registration before base64 was added */
+            <div className="adm-kyc-card__no-data">
+              <FaFileAlt className="adm-kyc-card__no-data-icon" />
+              <p className="adm-kyc-card__no-data-title">Preview not available</p>
+              <p className="adm-kyc-card__no-data-sub">
+                This document was submitted before file storage was enabled.
+                The applicant must re-upload for preview.
+              </p>
+            </div>
+          ) : isImg ? (
+            /* Image preview — click to zoom */
+            <div className="adm-kyc-card__img-wrap" onClick={() => setZoomed(true)} title="Click to enlarge">
+              <img src={doc.fileData} alt={label} className="adm-kyc-card__img" />
+              <div className="adm-kyc-card__img-overlay">
+                <FaEye /> Click to enlarge
+              </div>
+            </div>
+          ) : isPdf ? (
+            /* PDF — inline iframe preview */
+            <div className="adm-kyc-card__pdf-wrap">
+              <iframe
+                src={doc.fileData}
+                title={`${label} preview`}
+                className="adm-kyc-card__pdf-iframe"
+              />
+              <div className="adm-kyc-card__pdf-note">
+                <FaFilePdf /> If the PDF does not render, use the Download button below.
+              </div>
+            </div>
+          ) : (
+            <div className="adm-kyc-card__no-data">
+              <FaFileAlt className="adm-kyc-card__no-data-icon" />
+              <p className="adm-kyc-card__no-data-title">Unsupported format</p>
+              <p className="adm-kyc-card__no-data-sub">Use the download button to view this file.</p>
+            </div>
+          )}
+        </div>
+
+        {/* ── Action buttons ── */}
+        <div className="adm-kyc-card__actions">
+          {hasData && isImg && (
+            <button
+              type="button"
+              className="adm-kyc-card__btn"
+              onClick={() => setZoomed(true)}
+            >
+              <FaEye /> Full Preview
+            </button>
+          )}
+          {hasData && isPdf && (
+            <a
+              href={doc.fileData}
+              target="_blank"
+              rel="noreferrer"
+              className="adm-kyc-card__btn"
+            >
+              <FaExternalLinkAlt /> Open PDF
+            </a>
+          )}
+          {hasData ? (
+            <a
+              href={doc.fileData}
+              download={doc.fileName}
+              className="adm-kyc-card__btn adm-kyc-card__btn--dl"
+            >
+              <FaDownload /> Download
+            </a>
+          ) : (
+            <span className="adm-kyc-card__btn adm-kyc-card__btn--disabled">
+              <FaDownload /> Not Available
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Preview area */}
-      {doc.fileData && (
-        <div className="adm-kyc-card__preview">
-          {isImg ? (
-            <img
-              src={doc.fileData}
-              alt={label}
-              className="adm-kyc-card__img"
-            />
-          ) : isPdf ? (
-            <div className="adm-kyc-card__pdf-placeholder">
-              <FaFilePdf className="adm-kyc-card__pdf-icon" />
-              <span>PDF Document</span>
-            </div>
-          ) : null}
+      {/* ── Lightbox for image zoom ── */}
+      {zoomed && isImg && (
+        <div className="adm-lightbox" onClick={() => setZoomed(false)}>
+          <button className="adm-lightbox__close" onClick={() => setZoomed(false)} aria-label="Close preview">
+            <FaTimes />
+          </button>
+          <div className="adm-lightbox__label">{label} — {doc.fileName}</div>
+          <img
+            src={doc.fileData}
+            alt={label}
+            className="adm-lightbox__img"
+            onClick={e => e.stopPropagation()}
+          />
+          <div className="adm-lightbox__hint">Click outside the image to close</div>
         </div>
       )}
-
-      {/* Open / Download */}
-      {doc.fileData && (
-        <div className="adm-kyc-card__actions">
-          <a
-            href={doc.fileData}
-            target="_blank"
-            rel="noreferrer"
-            className="adm-kyc-card__btn"
-          >
-            <FaExternalLinkAlt /> Open in New Tab
-          </a>
-          <a
-            href={doc.fileData}
-            download={doc.fileName}
-            className="adm-kyc-card__btn adm-kyc-card__btn--dl"
-          >
-            <FaDownload /> Download
-          </a>
-        </div>
-      )}
-    </div>
+    </>
   )
 }
 

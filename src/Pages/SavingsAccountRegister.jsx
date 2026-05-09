@@ -6,7 +6,7 @@ import {
   FaUser, FaLock, FaEye, FaEyeSlash,
   FaArrowLeft, FaCheck, FaShieldAlt,
   FaIdCard, FaUpload, FaTimesCircle, FaCheckCircle,
-  FaArrowRight, FaUserCheck, FaClock
+  FaArrowRight, FaUserCheck, FaClock, FaClipboardList
 } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Register.css';
@@ -679,6 +679,22 @@ export default function Register() {
                 Back to Home
               </button>
             </div>
+
+            {/* Check status button */}
+            {registeredAccount && (
+              <button
+                className="reg-success-modal__btn-status"
+                onClick={() => {
+                  setShowSuccess(false);
+                  navigate('/application-status', {
+                    state: { prefillAccountNumber: registeredAccount.accountNumber }
+                  });
+                }}
+              >
+                <FaClipboardList style={{ marginRight: 7 }} />
+                Check Application Status
+              </button>
+            )}
 
             {/* Footnote */}
             <p className="reg-success-modal__note">

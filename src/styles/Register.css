@@ -914,3 +914,29 @@
 
   .reg-success-modal__title { font-size: 1.3rem; }
 }
+
+/* ── Check Application Status button in success popup ── */
+.reg-success-modal__btn-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 56px);
+  margin: 0 28px 4px;
+  padding: 11px 20px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid rgba(201,168,76,0.45);
+  background: rgba(201,168,76,0.07);
+  color: var(--accent-dark);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  letter-spacing: 0.2px;
+}
+
+.reg-success-modal__btn-status:hover {
+  background: rgba(201,168,76,0.15);
+  border-color: var(--accent);
+  color: var(--accent-dark);
+  transform: translateY(-1px);
+}

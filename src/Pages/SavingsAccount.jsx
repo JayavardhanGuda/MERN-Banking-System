@@ -339,9 +339,7 @@ export default function SavingsAccount() {
               <Link to="/register" className="sa-btn-primary">
                 Open Account Now <FaArrowRight className="ms-2" />
               </Link>
-              <Link to="/internet-banking-register" className="sa-btn-outline-dark">
-                Register for Internet Banking
-              </Link>
+             
             </div>
           </div>
         </section>

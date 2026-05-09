@@ -1,8 +1,6 @@
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import ScrollToTop from './Components/ScrollToTop'
 import Home from './Pages/Home'
-import LoginSelector from './Pages/LoginSelector'
-import UserLogin from './Pages/UserLogin'
-import AdminLogin from './Pages/AdminLogin'
 import Register from './Pages/SavingsAccountRegister'
 import SavingsAccount from './Pages/SavingsAccount'
 import ForgotPassword from './Pages/ForgotPassword'
@@ -16,6 +14,7 @@ import SmartLock from './Pages/SmartLock'
 import LockerBookings from './Pages/LockerBookings'
 import ReportFraud from './Pages/ReportFraud'
 import ComingSoon from './Pages/ComingSoon'
+import ApplicationStatus from './Pages/ApplicationStatus'
 
 function AppRoutes() {
   const location = useLocation()
@@ -30,8 +29,6 @@ function AppRoutes() {
       {/* ── Background page (or normal page when no modal) ── */}
       <Routes location={backgroundLocation || location}>
         <Route path="/"                          element={<Home />} />
-        <Route path="/user-login"                element={<UserLogin />} />
-        <Route path="/admin-login"               element={<AdminLogin />} />
         <Route path="/user-dashboard"            element={<UserDashboard />} />
         <Route path="/admin-dashboard"           element={<AdminDashboard />} />
         <Route path="/savings-account"           element={<SavingsAccount />} />
@@ -47,14 +44,16 @@ function AppRoutes() {
         <Route path="/login"                     element={<Login />} />
         <Route path="/forgot-password"           element={<ForgotPassword />} />
         <Route path="/reset-password"            element={<ResetPassword />} />
+        <Route path="/application-status"        element={<ApplicationStatus />} />
       </Routes>
 
       {/* ── Modal overlays: only when backgroundLocation is set ── */}
       {backgroundLocation && (
         <Routes>
-          <Route path="/login"           element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password"  element={<ResetPassword />} />
+          <Route path="/login"                element={<Login />} />
+          <Route path="/forgot-password"      element={<ForgotPassword />} />
+          <Route path="/reset-password"       element={<ResetPassword />} />
+          <Route path="/application-status"   element={<ApplicationStatus />} />
         </Routes>
       )}
     </>
@@ -64,6 +63,7 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AppRoutes />
     </BrowserRouter>
   )

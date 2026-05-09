@@ -17,7 +17,7 @@ export default function Home() {
 
   const slides = [
     {
-      title: "Welcome to PavitraBandham Cooperative Bank",
+      title: "Welcome to VJN Cooperative Bank",
       desc: "Fast, secure, and reliable banking solutions for all your financial needs. Your trust is our foundation.",
       badge: null,
       cta: "Open an Account",
@@ -26,7 +26,7 @@ export default function Home() {
       overlay: true
     },
     {
-      title: "PavitraBandham Debit & Credit Cards",
+      title: "VJN Debit & Credit Cards",
       desc: "Earn cashback on every swipe, enjoy contactless payments, and unlock exclusive lifestyle rewards — all with zero annual fee in the first year.",
       badge: "Coming Soon",
       cta: "Explore Cards",
@@ -192,7 +192,7 @@ export default function Home() {
                   Banking Built on Trust &amp; Transparency
                 </h2>
                 <p className="home-about__body">
-                  PavitraBandham Cooperative Bank is built on trust, transparency, and
+                  VJN Cooperative Bank is built on trust, transparency, and
                   customer-focused banking solutions. With years of reliability and
                   innovation, we empower financial growth for every individual and
                   business we serve.
@@ -256,7 +256,7 @@ export default function Home() {
           <div className="container">
             <div className="text-center mb-5">
               <span className="home-section__eyebrow">Our Advantages</span>
-              <h2 className="home-section__title">Why Choose PavitraBandham?</h2>
+              <h2 className="home-section__title">Why Choose VJN Bank?</h2>
               <p className="home-section__sub">We combine modern technology with personal banking to give you the best experience</p>
             </div>
             <div className="row g-4">
@@ -299,7 +299,7 @@ export default function Home() {
           <div className="container text-center">
             <h2 className="home-cta__title">Ready to Start Your Banking Journey?</h2>
             <p className="home-cta__sub">
-              Join over 1,00,000 customers who trust PavitraBandham for their financial needs.
+              Join over 1,00,000 customers who trust VJN Bank for their financial needs.
             </p>
             <div className="d-flex gap-3 justify-content-center flex-wrap">
               <Link to="/register" className="home-cta__btn-primary">
@@ -330,7 +330,7 @@ export default function Home() {
                 {
                   icon: <FaEnvelope />,
                   title: 'Email Us',
-                  lines: ['support@pavitrabandham.in', 'We reply within 24 hours']
+                  lines: ['support@vjnbank.in', 'We reply within 24 hours']
                 },
                 {
                   icon: <FaMapMarkerAlt />,

@@ -241,6 +241,35 @@
   color: var(--error);
 }
 
+/* Divider inside profile dropdown */
+.profile-dropdown-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 4px 0;
+}
+
+/* Application status link — distinct style */
+.profile-menu-link--status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-dark) !important;
+  font-weight: 700 !important;
+  font-size: 0.88rem;
+  background: rgba(201,168,76,0.06);
+}
+
+.profile-menu-link--status:hover {
+  background: rgba(201,168,76,0.14) !important;
+  color: var(--accent-dark) !important;
+  padding-left: 20px;
+}
+
+.profile-menu-link__icon {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
 /* ── Overlay / sidebar (kept for compatibility) ── */
 .overlay {
   position: fixed;
