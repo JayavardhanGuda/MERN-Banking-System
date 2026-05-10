@@ -304,7 +304,18 @@ export default function ApplicationStatus() {
           <div className="lm-card__footer">
             <p>
               New applicant?{' '}
-              <Link to="/register" className="register-link" onClick={closeModal}>Register here</Link>
+              <button
+                className="register-link"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' }}
+                onClick={() => {
+                  setModalOpen(false);
+                  document.getElementById('root')?.classList.remove('page-blurred');
+                  document.body.style.overflow = '';
+                  navigate('/register');
+                }}
+              >
+                Register here
+              </button>
             </p>
           </div>
         </div>
