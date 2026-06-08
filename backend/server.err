@@ -1,0 +1,94 @@
+Statement error: MongoServerSelectionError: read ECONNRESET
+    at Topology.selectServer (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\sdam\topology.js:327:38)
+    at async tryOperation (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\operations\execute_operation.js:148:18)
+    at async executeOperation (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\operations\execute_operation.js:78:16)
+    at async FindCursor._initialize (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:632:27)
+    at async FindCursor.fetchBatch (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:666:13)
+    at async FindCursor.next (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:342:17)
+    at async [Symbol.asyncIterator] (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:250:34)
+    at async FindCursor.toArray (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:422:26)
+    at async model.Query._find (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongoose\lib\query.js:2430:14) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-hxsq6xx-shard-00-01.kqx8lo2.mongodb.net:27017' => [ServerDescription],
+      'ac-hxsq6xx-shard-00-02.kqx8lo2.mongodb.net:27017' => [ServerDescription],
+      'ac-hxsq6xx-shard-00-00.kqx8lo2.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-2xsgqv-shard-0',
+    maxElectionId: new ObjectId('7fffffff00000000000000db'),
+    maxSetVersion: 59,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: read ECONNRESET
+      at TLSSocket.<anonymous> (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cmap\connect.js:286:44)
+      at Object.onceWrapper (node:events:623:26)
+      at TLSSocket.emit (node:events:508:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+    errorLabelSet: Set(1) { 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: read ECONNRESET
+        at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+      errno: -4077,
+      code: 'ECONNRESET',
+      syscall: 'read'
+    }
+  }
+}
+Statement error: MongoServerSelectionError: read ECONNRESET
+    at Topology.selectServer (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\sdam\topology.js:327:38)
+    at async tryOperation (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\operations\execute_operation.js:148:18)
+    at async executeOperation (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\operations\execute_operation.js:78:16)
+    at async FindCursor._initialize (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:632:27)
+    at async FindCursor.fetchBatch (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:666:13)
+    at async FindCursor.next (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:342:17)
+    at async [Symbol.asyncIterator] (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:250:34)
+    at async FindCursor.toArray (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:422:26)
+    at async model.Query._find (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongoose\lib\query.js:2430:14) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-hxsq6xx-shard-00-01.kqx8lo2.mongodb.net:27017' => [ServerDescription],
+      'ac-hxsq6xx-shard-00-02.kqx8lo2.mongodb.net:27017' => [ServerDescription],
+      'ac-hxsq6xx-shard-00-00.kqx8lo2.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-2xsgqv-shard-0',
+    maxElectionId: new ObjectId('7fffffff00000000000000db'),
+    maxSetVersion: 59,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: read ECONNRESET
+      at TLSSocket.<anonymous> (C:\Users\2488264\Desktop\MERN-Banking-System\backend\node_modules\mongodb\lib\cmap\connect.js:286:44)
+      at Object.onceWrapper (node:events:623:26)
+      at TLSSocket.emit (node:events:508:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+    errorLabelSet: Set(1) { 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: read ECONNRESET
+        at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+      errno: -4077,
+      code: 'ECONNRESET',
+      syscall: 'read'
+    }
+  }
+}

@@ -1,13 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const { sendApprovalEmail, sendRejectionEmail } = require('../utils/emailService');
-
-// Admin credentials (in production, use environment variables)
-const ADMIN_EMAIL = 'admin-vjn@gmail.com';
-const ADMIN_PASSWORD = 'admin@123';
+const adminController = require('../controllers/adminController');
 
 // Admin login
+router.post('/login', adminController.adminLogin);
+
+// Get pending accounts
+router.get('/accounts/pending', adminController.getPendingAccounts);
+
+// Get approved accounts
+router.get('/accounts/approved', adminController.getApprovedAccounts);
+
+// Get rejected accounts
+router.get('/accounts/rejected', adminController.getRejectedAccounts);
+
+// Approve account
+router.put('/accounts/:accountNumber/approve', adminController.approveAccount);
+
+// Reject account
+router.put('/accounts/:accountNumber/reject', adminController.rejectAccount);
+
+module.exports = router;
 router.post('/login', (req, res) => {
   try {
     const { email, password } = req.body;

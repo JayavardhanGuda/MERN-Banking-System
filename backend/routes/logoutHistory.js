@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const LogoutHistory = require('../models/LogoutHistory');
+const logoutController = require('../controllers/logoutHistoryController');
+
+// Log logout
+router.post('/', logoutController.logLogout);
+
+module.exports = router;
 
 // Log a logout event
 router.post('/', async (req, res) => {

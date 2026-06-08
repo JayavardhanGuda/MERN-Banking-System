@@ -1,8 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+const accountController = require('../controllers/accountController');
 
-// Create account (alternative endpoint)
+// Get all accounts
+router.get('/', accountController.getAllAccounts);
+
+// Get account by account number
+router.get('/:accountNumber', accountController.getAccountByNumber);
+
+module.exports = router;
 router.post('/', async (req, res) => {
   try {
     const accountData = req.body;

@@ -45,7 +45,7 @@ export default function InternetBankingRegister() {
     const checkRegistration = async () => {
       try {
         const response = await checkInternetBankingStatus(currentUser.accountNumber);
-        if (response.success && response.isRegistered) {
+        if (response.success && (response.isRegistered || response.data?.isRegistered)) {
           setIsRegistered(true);
         }
       } catch (error) {

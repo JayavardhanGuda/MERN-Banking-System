@@ -5,12 +5,14 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 4000;
 
-// Connect to MongoDB
+// Connect to MongoDB (non-blocking)
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch(err => {
+    console.warn('MongoDB connection warning (server will continue to run):', err.message);
+  });
 
 // Middleware
 app.use(cors());

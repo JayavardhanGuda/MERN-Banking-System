@@ -8,7 +8,7 @@ import {
   FaClock, FaHistory, FaSpinner, FaExclamationTriangle
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { createServiceRequest, getServiceRequests, cancelServiceRequest } from '../services/api';
+import { createServiceRequest, getServiceRequests, cancelServiceRequest, getUserProfile } from '../services/api';
 import '../styles/ServiceRequest.css';
 
 const CATEGORIES = [
@@ -55,33 +55,45 @@ export default function ServiceRequest({ embedded = false }) {
   };
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('currentUser'));
-    if (!user) { 
-      navigate('/login'); 
-      return; 
-    }
-    
-    const userData = {
-      firstName:         user.firstName || '',
-      lastName:          user.lastName || '',
-      phone:             user.phone || '',
-      address:           user.address || '',
-      city:              user.city || '',
-      state:             user.state || '',
-      pincode:           user.pincode || '',
-      nomineeName:       user.nomineeName || '',
-      nomineeRelation:   user.nomineeRelation || '',
-      emailStatement:    user.emailStatement || false,
-      physicalStatement: user.physicalStatement || false,
-    };
-    
-    // Batch state updates
-    setTimeout(() => {
-      setCurrentUser(user);
+    const init = async () => {
+      const user = JSON.parse(localStorage.getItem('currentUser'));
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+
+      let latestUser = user;
+      try {
+        const profileResponse = await getUserProfile(user.accountNumber);
+        if (profileResponse.success && profileResponse.data) {
+          latestUser = profileResponse.data;
+          localStorage.setItem('currentUser', JSON.stringify(latestUser));
+        }
+      } catch (error) {
+        console.warn('Unable to refresh profile on service request page:', error);
+      }
+
+      const userData = {
+        firstName:         latestUser.firstName || '',
+        lastName:          latestUser.lastName || '',
+        phone:             latestUser.phone || '',
+        address:           latestUser.address || '',
+        city:              latestUser.city || '',
+        state:             latestUser.state || '',
+        pincode:           latestUser.pincode || '',
+        nomineeName:       latestUser.nomineeName || '',
+        nomineeRelation:   latestUser.nomineeRelation || '',
+        emailStatement:    latestUser.emailStatement || false,
+        physicalStatement: latestUser.physicalStatement || false,
+      };
+
+      setCurrentUser(latestUser);
       setFormData({ ...userData, userRemarks: '' });
       setOriginalData(userData);
-      loadRequestHistory(user.accountNumber);
-    }, 0);
+      loadRequestHistory(latestUser.accountNumber);
+    };
+
+    init();
   }, [navigate]);
 
   const handleChange = (e) => {

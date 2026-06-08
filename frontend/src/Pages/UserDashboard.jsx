@@ -6,7 +6,7 @@ import Breadcrumbs from '../Components/Breadcrumbs'
 import MoneyTransfer from './MoneyTransfer'
 import ServiceRequest from './ServiceRequest'
 import SmartLock from './SmartLock'
-import { getAccountStatement, getAccount } from '../services/api'
+import { getAccountStatement, getAccount, getUserProfile } from '../services/api'
 import {
   FaUser, FaChartBar, FaExchangeAlt, FaFileAlt,
   FaWallet, FaShoppingCart, FaClock, FaUniversity,
@@ -56,11 +56,18 @@ export default function UserDashboard() {
       
       if (storedUser && storedUser.accountNumber) {
         try {
-          // Fetch latest user data from MongoDB to get updated balance
+          // Fetch latest user profile to show updated details from service requests
+          const profileResponse = await getUserProfile(storedUser.accountNumber)
+          if (profileResponse.success && profileResponse.data) {
+            setCurrentUser(profileResponse.data)
+            localStorage.setItem('currentUser', JSON.stringify(profileResponse.data))
+          }
+
+          // Refresh balance from account data if available
           const accountResponse = await getAccount(storedUser.accountNumber)
           if (accountResponse.success && accountResponse.data) {
             const updatedUser = {
-              ...storedUser,
+              ...JSON.parse(localStorage.getItem('currentUser') || JSON.stringify(storedUser)),
               balance: accountResponse.data.balance || accountResponse.data.initialDeposit
             }
             setCurrentUser(updatedUser)

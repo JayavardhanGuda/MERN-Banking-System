@@ -1,7 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const LockerBooking = require('../models/LockerBooking');
-const User = require('../models/User');
+const lockerController = require('../controllers/lockerBookingController');
+
+// Book locker
+router.post('/', lockerController.bookLocker);
+
+// Get all locker bookings (admin)
+router.get('/', lockerController.getAllLockerBookings);
+
+// Get pending locker bookings (admin)
+router.get('/pending', lockerController.getPendingLockerBookings);
+
+// Get pending locker count
+router.get('/pending/count', lockerController.getPendingLockerCount);
+
+// Get locker bookings by account
+router.get('/account/:accountNumber', lockerController.getLockerBookingsByAccount);
+
+// Approve locker booking
+router.put('/:bookingId/approve', lockerController.approveLockerBooking);
+
+// Reject locker booking
+router.put('/:bookingId/reject', lockerController.rejectLockerBooking);
+
+// Cancel locker booking
+router.delete('/:bookingId', lockerController.cancelLockerBooking);
+
+module.exports = router;
 
 // Locker type configurations
 const LOCKER_CONFIG = {

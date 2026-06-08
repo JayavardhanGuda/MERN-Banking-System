@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+const statusController = require('../controllers/applicationStatusController');
+
+// Check application status
+router.get('/:accountNumber', statusController.checkApplicationStatus);
+
+module.exports = router;
 
 // Check application/account status by account number
 router.get('/:accountNumber', async (req, res) => {

@@ -1,5 +1,5 @@
-// API Base URL
-const API_BASE_URL = 'http://localhost:4000/api';
+// API Base URL (use Vite env var when available). Default matches backend PORT=4000
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
 
 // Get auth token from storage
 function getAuthToken() {
