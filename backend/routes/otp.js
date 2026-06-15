@@ -16,11 +16,9 @@ router.post('/reset-password', otpController.resetPassword);
 router.post('/generate', otpController.generateOtp);
 router.post('/validate', otpController.validateOtp);
 
-// Get OTPs by account (debug)
-router.get('/account/:accountNumber', otpController.getOtpsByAccount);
 
 // Registration email verification
 router.post('/registration/send', otpController.sendRegistrationOtp);
-router.post('/registration/verify', otpController.verifyRegistrationOtp);
+router.post('/registration/verify',otpController.verifyRegistrationOtp);
 
 module.exports = router;

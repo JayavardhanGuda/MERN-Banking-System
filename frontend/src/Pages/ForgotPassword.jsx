@@ -146,7 +146,7 @@ export default function ForgotPassword() {
       setTimeLeft(300); // 5 minutes
       setOtp('');
       setStep(2);
-
+      
       // Show OTP in console for testing (remove in production)
       if (response.data?.otp) {
         console.log(`%c[ForgotPassword] OTP: ${response.data.otp}`, 'color:#c9a84c;font-weight:bold;font-size:14px');

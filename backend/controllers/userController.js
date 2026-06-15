@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const User = require('../models/User');
 const store = require('../data/store');
-const { sendRegistrationEmail, sendApprovalEmail } = require('../utils/emailService');
+const { sendRegistrationEmail } = require('../utils/emailService');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'vjn_banking_super_secret_key_2024_secure';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
@@ -161,7 +161,9 @@ exports.login = async (req, res) => {
     if (isHashed) {
       // Verify password using bcrypt
       isPasswordValid = await bcrypt.compare(password, pwd);
-    } else {
+    }
+    
+    else {
       // Legacy: plain text password comparison
       isPasswordValid = (pwd === password);
 
@@ -212,7 +214,9 @@ exports.login = async (req, res) => {
     if (dbAvailable) {
       user.lastLogin = new Date();
       await user.save();
-    } else {
+    } 
+
+    else {
       const idx = store.users.findIndex(u => u.accountNumber === user.accountNumber);
       if (idx >= 0) store.users[idx].lastLogin = new Date().toISOString();
     }

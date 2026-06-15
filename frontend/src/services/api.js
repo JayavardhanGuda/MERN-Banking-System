@@ -1,16 +1,92 @@
 // API Base URL (use Vite env var when available). Default matches backend PORT=4000
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
 
-// Get auth token from storage
+// Get regular user auth token
 function getAuthToken() {
   return localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+}
+
+// Get admin JWT token (stored in sessionStorage on admin login)
+function getAdminToken() {
+  return sessionStorage.getItem('adminToken');
+}
+
+/**
+ * Decode a JWT and return its payload without verifying the signature.
+ * We only use this client-side to read the exp claim.
+ */
+function decodeJwt(token) {
+  try {
+    const payload = token.split('.')[1];
+    return JSON.parse(atob(payload));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Returns true if the token is expired or within 30 seconds of expiring.
+ * Returns FALSE (not expired) if token is null/missing — callers that need
+ * a token will get a 401 from the server, which is the right way to handle
+ * missing tokens. We only redirect proactively for tokens that ARE present
+ * but expired.
+ */
+function isTokenExpired(token) {
+  if (!token) return false;  // no token → not our job to redirect, let server 401
+  const decoded = decodeJwt(token);
+  if (!decoded || !decoded.exp) return false; // can't decode → let server decide
+  // exp is in seconds, Date.now() is in milliseconds
+  return decoded.exp * 1000 < Date.now() + 30_000;
+}
+
+/**
+ * Clear all auth data from storage and redirect to /login.
+ * Called when a 401 is received from the backend (token expired/invalid).
+ */
+function handleSessionExpired(isAdmin = false) {
+  // Clear all stored tokens and user data
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('currentUser');
+  sessionStorage.removeItem('authToken');
+  sessionStorage.removeItem('currentUser');
+  sessionStorage.removeItem('adminToken');
+  sessionStorage.removeItem('adminSession');
+
+  // Notify any listeners (e.g. Header component)
+  window.dispatchEvent(new Event('userSessionChanged'));
+
+  // Redirect to login — use replace so back button doesn't return to dashboard
+  const message = isAdmin
+    ? 'Admin session expired. Please log in again.'
+    : 'Your session has expired. Please log in again.';
+
+  // Store the message so Login page can display it
+  sessionStorage.setItem('sessionExpiredMessage', message);
+  window.location.replace('/login');
+
 }
 
 // Helper function for API calls
 async function apiCall(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
-  const token = getAuthToken();
-  
+
+  // Admin routes (/api/admin/...) use the admin JWT; everything else uses the user JWT
+  const isAdminRoute = endpoint.startsWith('/admin/') && !endpoint.startsWith('/admin/login');
+  const token = isAdminRoute ? getAdminToken() : getAuthToken();
+
+  // Routes that never require a token — skip expiry check and 401 redirect for these
+  const isPublicRoute = endpoint === '/users/login'
+    || endpoint === '/users/register'
+    || endpoint === '/users/verify-token'
+    || endpoint === '/admin/login'
+    || endpoint.startsWith('/otp/')
+    || endpoint.startsWith('/application-status/');
+
+  if (!isPublicRoute && isTokenExpired(token)) {
+    handleSessionExpired(isAdminRoute);
+    return { success: false, message: 'Session expired' };
+  }
+
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -23,25 +99,37 @@ async function apiCall(endpoint, options = {}) {
   try {
     const response = await fetch(url, config);
     const data = await response.json();
-    
-    // Return the data as-is (includes success: true/false from backend)
-    // This allows components to handle both success and error cases
-    if (!response.ok) {
-      // Return the error response from backend instead of throwing
-      return { 
-        success: false, 
-        message: data.message || 'API request failed',
-        ...data 
+
+    // 401 from the server means the token was rejected (expired or tampered).
+    // Clear the session and redirect to login automatically.
+    if (response.status === 401) {
+      // Don't redirect for login attempts themselves — just return the error
+      if (!isPublicRoute) {
+        handleSessionExpired(isAdminRoute);
+      }
+      return {
+        success: false,
+        message: data.message || 'Session expired. Please log in again.',
+        ...data
       };
     }
-    
+
+    // Return the data as-is (includes success: true/false from backend)
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'API request failed',
+        ...data
+      };
+    }
+
     return data;
+    
   } catch (error) {
     console.error('API Error:', error);
-    // Return a consistent error format for network/parsing errors
-    return { 
-      success: false, 
-      message: error.message || 'Network error. Please check your connection.' 
+    return {
+      success: false,
+      message: error.message || 'Network error. Please check your connection.'
     };
   }
 }
@@ -75,6 +163,9 @@ export function logout() {
   localStorage.removeItem('currentUser');
   sessionStorage.removeItem('authToken');
   sessionStorage.removeItem('currentUser');
+  sessionStorage.removeItem('adminToken');
+  sessionStorage.removeItem('adminSession');
+  window.dispatchEvent(new Event('userSessionChanged'));
 }
 
 // ============ FORGOT PASSWORD / OTP APIs ============
@@ -110,6 +201,7 @@ export async function resetPassword(accountNumber, resetToken, newPassword) {
     body: JSON.stringify({ accountNumber, resetToken, newPassword }),
   });
 }
+
 
 // ============ REGISTRATION EMAIL VERIFICATION APIs ============
 
@@ -375,24 +467,6 @@ export async function checkApplicationStatus(accountNumber) {
   return apiCall(`/application-status/${accountNumber}`);
 }
 
-// ============ OTP APIs ============
-
-// Generate OTP
-export async function generateOtp(data) {
-  return apiCall('/otp/generate', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  });
-}
-
-// Validate OTP
-export async function validateOtp(data) {
-  return apiCall('/otp/validate', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  });
-}
-
 // ============ LOGOUT HISTORY APIs ============
 
 // Log logout
@@ -465,8 +539,6 @@ export default {
   approveAccount,
   rejectAccount,
   checkApplicationStatus,
-  generateOtp,
-  validateOtp,
   logLogout,
   reportFraud,
   submitFeedback,

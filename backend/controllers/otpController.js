@@ -385,103 +385,6 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-/**
- * Generate generic OTP
- * POST /api/otp/generate
- */
-exports.generateOtp = async (req, res) => {
-  try {
-    const { accountNumber, userId, type } = req.body;
-
-    const otp = String(Math.floor(100000 + Math.random() * 900000));
-
-    const otpRecord = new Otp({
-      accountNumber,
-      userId,
-      otp,
-      type: type || 'general',
-      expiresAt: new Date(Date.now() + 5 * 60 * 1000),
-      used: false
-    });
-
-    await otpRecord.save();
-
-    console.log(`[OTP] Generated for ${accountNumber || userId}: ${otp}`);
-
-    res.status(201).json({
-      success: true,
-      message: 'OTP sent successfully',
-      data: {
-        expiresAt: otpRecord.expiresAt,
-        otp: otp
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: 'Server error' 
-    });
-  }
-};
-
-/**
- * Validate generic OTP
- * POST /api/otp/validate
- */
-exports.validateOtp = async (req, res) => {
-  try {
-    const { accountNumber, userId, otp } = req.body;
-
-    const otpRecord = await Otp.findOne({
-      $or: [
-        { accountNumber: accountNumber },
-        { userId: userId }
-      ],
-      otp: otp,
-      used: false,
-      expiresAt: { $gt: new Date() }
-    });
-
-    if (!otpRecord) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Invalid or expired OTP' 
-      });
-    }
-
-    otpRecord.used = true;
-    await otpRecord.save();
-
-    res.json({
-      success: true,
-      message: 'OTP verified successfully'
-    });
-  } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: 'Server error' 
-    });
-  }
-};
-
-/**
- * Get OTPs by account number (debug route)
- * GET /api/otp/account/:accountNumber
- */
-exports.getOtpsByAccount = async (req, res) => {
-  try {
-    const otps = await Otp.find({ 
-      accountNumber: req.params.accountNumber 
-    }).sort({ createdAt: -1 });
-    
-    res.json({ success: true, data: otps });
-  } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: 'Server error' 
-    });
-  }
-};
 
 /**
  * Send OTP for registration email verification
@@ -497,6 +400,8 @@ exports.sendRegistrationOtp = async (req, res) => {
         message: 'Email is required' 
       });
     }
+
+    
 
     const existingUser = await User.findOne({ 
       email: { $regex: new RegExp(`^${email.trim()}$`, 'i') } 
@@ -592,7 +497,7 @@ exports.sendRegistrationOtp = async (req, res) => {
     };
 
     const info = await transporter.sendMail(mailOptions);
-
+    
     console.log(`\n========================================`);
     console.log(`[REGISTRATION EMAIL VERIFICATION]`);
     console.log(`Email: ${email}`);

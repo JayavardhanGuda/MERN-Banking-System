@@ -1,29 +1,92 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendApprovalEmail, sendRejectionEmail } = require('../utils/emailService');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'vjn_banking_super_secret_key_2024_secure';
+const ADMIN_JWT_EXPIRES_IN = '8h'; // Admin sessions expire in 8 hours
+
 /**
- * Admin login (you'll need to add admin route to handle this)
+ * Admin login — credentials come from .env, never hardcoded in source.
+ * Issues a short-lived JWT with role:'admin' on success.
  * POST /api/admin/login
  */
 exports.adminLogin = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Check against hardcoded admin or db admin collection
-    if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-      res.json({
-        success: true,
-        message: 'Admin login successful',
-        data: { username, role: 'admin' }
-      });
-    } else {
-      res.status(401).json({ 
-        success: false, 
-        message: 'Invalid admin credentials' 
+    if (!username || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Username and password are required'
       });
     }
+
+    // Safety check — if env vars aren't loaded, fail with a clear message
+    if (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD) {
+      console.error('[ADMIN] ADMIN_USERNAME or ADMIN_PASSWORD not set in .env');
+      return res.status(500).json({
+        success: false,
+        message: 'Admin credentials not configured on server. Check .env file.'
+      });
+    }
+
+    console.log(`[ADMIN] Login attempt for username: "${username}"`);
+
+    // Credentials live in .env — never in source code
+    if (
+      username !== process.env.ADMIN_USERNAME ||
+      password !== process.env.ADMIN_PASSWORD
+    ) {
+      console.log(`[ADMIN] Login failed — expected username: "${process.env.ADMIN_USERNAME}"`);
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid admin credentials'
+      });
+    }
+
+    // Sign a JWT so the frontend can authenticate future admin requests
+    const token = jwt.sign(
+      { username, role: 'admin' },
+      JWT_SECRET,
+      { expiresIn: ADMIN_JWT_EXPIRES_IN }
+    );
+
+    res.json({
+      success: true,
+      message: 'Admin login successful',
+      data: { username, role: 'admin' },
+      token
+    });
   } catch (error) {
+    console.error('[ADMIN] Login error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+/**
+ * Middleware — verifies the admin JWT on every protected admin route.
+ * The frontend must send: Authorization: Bearer <adminToken>
+ */
+exports.verifyAdminToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'No admin token provided' });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Access denied: not an admin' });
+    }
+
+    req.admin = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({ success: false, message: 'Invalid or expired admin token' });
   }
 };
 
@@ -67,6 +130,21 @@ exports.getRejectedAccounts = async (req, res) => {
 };
 
 /**
+ * Get all accounts with optional status filter
+ * GET /api/admin/accounts?status=Pending
+ */
+exports.getAllAccounts = async (req, res) => {
+  try {
+    const { status } = req.query;
+    const filter = status ? { status } : {};
+    const users = await User.find(filter).select('-password');
+    res.json({ success: true, data: users });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+/**
  * Approve an account
  * PUT /api/admin/accounts/:accountNumber/approve
  */
@@ -74,21 +152,15 @@ exports.approveAccount = async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
       { accountNumber: req.params.accountNumber },
-      { 
-        status: 'Approved',
-        approvedAt: new Date()
-      },
+      { status: 'Approved', approvedAt: new Date() },
       { new: true }
     );
 
     if (!user) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Account not found' 
-      });
+      return res.status(404).json({ success: false, message: 'Account not found' });
     }
 
-    // Send approval email asynchronously
+    // Send approval email asynchronously (non-blocking)
     sendApprovalEmail(
       user.email,
       user.firstName,
@@ -97,12 +169,9 @@ exports.approveAccount = async (req, res) => {
       user.username
     ).catch(err => console.error('Failed to send approval email:', err));
 
-    res.json({ 
-      success: true, 
-      message: 'Account approved successfully', 
-      data: user 
-    });
+    res.json({ success: true, message: 'Account approved successfully', data: user });
   } catch (error) {
+    console.error('[ADMIN] Approve error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
@@ -117,21 +186,15 @@ exports.rejectAccount = async (req, res) => {
 
     const user = await User.findOneAndUpdate(
       { accountNumber: req.params.accountNumber },
-      { 
-        status: 'Rejected',
-        rejectedAt: new Date()
-      },
+      { status: 'Rejected', rejectedAt: new Date() },
       { new: true }
     );
 
     if (!user) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Account not found' 
-      });
+      return res.status(404).json({ success: false, message: 'Account not found' });
     }
 
-    // Send rejection email asynchronously
+    // Send rejection email asynchronously (non-blocking)
     sendRejectionEmail(
       user.email,
       user.firstName,
@@ -140,12 +203,9 @@ exports.rejectAccount = async (req, res) => {
       reason || 'Documents do not meet our requirements'
     ).catch(err => console.error('Failed to send rejection email:', err));
 
-    res.json({ 
-      success: true, 
-      message: 'Account rejected successfully', 
-      data: user 
-    });
+    res.json({ success: true, message: 'Account rejected successfully', data: user });
   } catch (error) {
+    console.error('[ADMIN] Reject error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };

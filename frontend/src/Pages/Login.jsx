@@ -4,7 +4,7 @@ import {
   FaUser, FaLock, FaEye, FaEyeSlash,
   FaShieldAlt, FaTimes, FaArrowRight, FaSpinner
 } from 'react-icons/fa';
-import { loginUser } from '../services/api';
+import { loginUser, adminLogin } from '../services/api';
 import '../styles/Login.css';
 
 /**
@@ -18,6 +18,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ username: '', password: '', rememberMe: false });
   const [loginError, setLoginError] = useState('');
+  const [sessionMessage, setSessionMessage] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,6 +26,15 @@ export default function Login() {
   useEffect(() => {
     const t = setTimeout(() => setModalOpen(true), 60);
     return () => clearTimeout(t);
+  }, []);
+
+  /* Pick up session-expired message set by apiCall before redirect */
+  useEffect(() => {
+    const msg = sessionStorage.getItem('sessionExpiredMessage');
+    if (msg) {
+      setSessionMessage(msg);
+      sessionStorage.removeItem('sessionExpiredMessage');
+    }
   }, []);
 
   /* Close → go back to the page the user was on */
@@ -64,12 +74,6 @@ export default function Login() {
     if (loginError) setLoginError('');
   };
 
-  // Admin credentials - KEEP SECRET
-  const ADMIN_CREDENTIALS = {
-    username: 'vjnadmin',
-    password: 'VJN@Admin2024#Secure'
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const username = formData.username.trim();
@@ -78,36 +82,36 @@ export default function Login() {
     setIsLoading(true);
     setLoginError('');
 
-    // Check for admin login first
-    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-      // Store admin session
-      const adminSession = {
-        isAdmin: true,
-        name: 'Admin',
-        loginTime: new Date().toISOString(),
-        sessionId: `admin_${Date.now()}`
-      };
-      sessionStorage.setItem('adminSession', JSON.stringify(adminSession));
-      
-      document.getElementById('root')?.classList.remove('page-blurred');
-      setIsLoading(false);
-      navigate('/admin-dashboard', { replace: true });
-      return;
-    }
-
-    // User login via API with JWT
     try {
+      // Try admin login first via the backend API — credentials live in .env, not here
+      const adminResponse = await adminLogin({ username, password });
+
+      if (adminResponse.success) {
+        // Store the admin JWT so protected admin API calls can send it
+        sessionStorage.setItem('adminToken', adminResponse.token);
+        sessionStorage.setItem('adminSession', JSON.stringify({
+          isAdmin: true,
+          username: adminResponse.data.username,
+          loginTime: new Date().toISOString()
+        }));
+
+        document.getElementById('root')?.classList.remove('page-blurred');
+        setIsLoading(false);
+        navigate('/admin-dashboard', { replace: true });
+        return;
+      }
+
+      // Admin login failed — try regular user login.
+      // We always fall through to user login regardless of why admin failed,
+      // because the entered credentials might be a valid user account.
       const response = await loginUser({ username, password });
 
       if (response.success) {
-        // Store JWT token
+        // rememberMe: use localStorage so session survives browser close
+        // otherwise use sessionStorage — cleared when tab/browser closes
         const storage = formData.rememberMe ? localStorage : sessionStorage;
         storage.setItem('authToken', response.token);
         storage.setItem('currentUser', JSON.stringify(response.data));
-        
-        // Also store in localStorage for consistency
-        localStorage.setItem('authToken', response.token);
-        localStorage.setItem('currentUser', JSON.stringify(response.data));
 
         // Dispatch custom event to notify Header of session change
         window.dispatchEvent(new Event('userSessionChanged'));
@@ -173,6 +177,14 @@ export default function Login() {
           <p className="lm-card__sub">Enter your credentials to continue</p>
 
           <form onSubmit={handleSubmit} className="login-form">
+            {/* Session expired banner */}
+            {sessionMessage && !loginError && (
+              <div className="lm-session-expired">
+                <FaShieldAlt className="lm-session-expired__icon" />
+                {sessionMessage}
+              </div>
+            )}
+
             {loginError && (
               <div className="lm-error">
                 <FaTimes className="lm-error__icon" />
