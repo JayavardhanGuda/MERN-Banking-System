@@ -6,8 +6,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: "vjncobank@gmail.com",
-    pass: "ojcpjctctzmcmbkv",
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
   tls: {
     rejectUnauthorized: false,
@@ -189,7 +189,7 @@ const sendApprovalEmail = async (email, firstName, lastName, accountNumber, user
                     
                     <!-- CTA Button -->
                     <div style="text-align: center; margin: 30px 0;">
-                      <a href="http://localhost:5173/login" style="display: inline-block; background: linear-gradient(135deg, #c9a84c 0%, #b8963f 100%); color: #0d1b3e; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                      <a href="${process.env.FRONTEND_URL || 'https://your-app.onrender.com'}/login" style="display: inline-block; background: linear-gradient(135deg, #c9a84c 0%, #b8963f 100%); color: #0d1b3e; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
                         Login to Your Account
                       </a>
                     </div>
