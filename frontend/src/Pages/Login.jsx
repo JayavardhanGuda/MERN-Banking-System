@@ -83,47 +83,55 @@ export default function Login() {
     setLoginError('');
 
     try {
-      // Try admin login first via the backend API — credentials live in .env, not here
-      const adminResponse = await adminLogin({ username, password });
+      // Check if this is the admin username — if so go straight to admin login,
+      // skip user login entirely. This avoids polluting backend logs with failed
+      // user lookups for the admin account and vice versa.
+      const isAdminUsername = username === 'vjnadmin';
 
-      if (adminResponse.success) {
-        // Store the admin JWT so protected admin API calls can send it
-        sessionStorage.setItem('adminToken', adminResponse.token);
-        sessionStorage.setItem('adminSession', JSON.stringify({
-          isAdmin: true,
-          username: adminResponse.data.username,
-          loginTime: new Date().toISOString()
-        }));
+      if (isAdminUsername) {
+        const adminResponse = await adminLogin({ username, password });
 
-        document.getElementById('root')?.classList.remove('page-blurred');
-        setIsLoading(false);
-        navigate('/admin-dashboard', { replace: true });
+        if (adminResponse.success) {
+          sessionStorage.setItem('adminToken', adminResponse.token);
+          sessionStorage.setItem('adminSession', JSON.stringify({
+            isAdmin: true,
+            username: adminResponse.data.username,
+            loginTime: new Date().toISOString()
+          }));
+          document.getElementById('root')?.classList.remove('page-blurred');
+          navigate('/admin-dashboard', { replace: true });
+        } else {
+          // Use the actual server message — this shows "Too many attempts"
+          // when rate limit is hit, or "Invalid admin credentials" otherwise
+          setLoginError(adminResponse.message || 'Invalid admin credentials.');
+        }
         return;
       }
 
-      // Admin login failed — try regular user login.
-      // We always fall through to user login regardless of why admin failed,
-      // because the entered credentials might be a valid user account.
+      // Regular user login
       const response = await loginUser({ username, password });
 
       if (response.success) {
-        // rememberMe: use localStorage so session survives browser close
-        // otherwise use sessionStorage — cleared when tab/browser closes
-        const storage = formData.rememberMe ? localStorage : sessionStorage;
-        storage.setItem('authToken', response.token);
-        storage.setItem('currentUser', JSON.stringify(response.data));
+        // Token storage respects rememberMe:
+        // - rememberMe ON  → localStorage  (survives browser close)
+        // - rememberMe OFF → sessionStorage (clears when tab closes)
+        const tokenStorage = formData.rememberMe ? localStorage : sessionStorage;
+        tokenStorage.setItem('authToken', response.token);
 
-        // Dispatch custom event to notify Header of session change
+        // currentUser always goes to localStorage so UserDashboard
+        // can reliably read it regardless of rememberMe state.
+        localStorage.setItem('currentUser', JSON.stringify(response.data));
+
         window.dispatchEvent(new Event('userSessionChanged'));
-
         document.getElementById('root')?.classList.remove('page-blurred');
         navigate('/user-dashboard');
       } else {
-        setLoginError(response.message || 'Login failed. Please try again.');
+        setLoginError(response.message || 'Invalid username/email or password.');
       }
+
     } catch (error) {
       console.error('Login error:', error);
-      setLoginError(error.message || 'Invalid username/email or password.');
+      setLoginError('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }

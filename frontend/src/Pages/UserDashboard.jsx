@@ -51,7 +51,11 @@ export default function UserDashboard() {
 
   useEffect(() => {
     const loadData = async () => {
-      const storedUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
+      const storedUser = JSON.parse(
+        localStorage.getItem('currentUser') ||
+        sessionStorage.getItem('currentUser') ||
+        'null'
+      )
       setCurrentUser(storedUser)
       
       if (storedUser && storedUser.accountNumber) {

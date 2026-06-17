@@ -42,8 +42,13 @@ function isTokenExpired(token) {
 /**
  * Clear all auth data from storage and redirect to /login.
  * Called when a 401 is received from the backend (token expired/invalid).
+ * Does nothing if we are already on the login page.
  */
 function handleSessionExpired(isAdmin = false) {
+  // If already on the login page, do not redirect — it would cause an
+  // infinite reload loop and interrupts in-progress login attempts.
+  if (window.location.pathname === '/login') return;
+
   // Clear all stored tokens and user data
   localStorage.removeItem('authToken');
   localStorage.removeItem('currentUser');
@@ -55,15 +60,14 @@ function handleSessionExpired(isAdmin = false) {
   // Notify any listeners (e.g. Header component)
   window.dispatchEvent(new Event('userSessionChanged'));
 
-  // Redirect to login — use replace so back button doesn't return to dashboard
+  // Store the message so Login page can display it
   const message = isAdmin
     ? 'Admin session expired. Please log in again.'
     : 'Your session has expired. Please log in again.';
-
-  // Store the message so Login page can display it
   sessionStorage.setItem('sessionExpiredMessage', message);
-  window.location.replace('/login');
 
+  // replace() so back button doesn't return to the dead dashboard
+  window.location.replace('/login');
 }
 
 // Helper function for API calls

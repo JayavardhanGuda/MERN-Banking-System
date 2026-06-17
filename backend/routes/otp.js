@@ -12,11 +12,6 @@ router.post('/forgot-password/verify', otpController.verifyForgotPasswordOtp);
 // Reset password
 router.post('/reset-password', otpController.resetPassword);
 
-// Generic OTP operations
-router.post('/generate', otpController.generateOtp);
-router.post('/validate', otpController.validateOtp);
-
-
 // Registration email verification
 router.post('/registration/send', otpController.sendRegistrationOtp);
 router.post('/registration/verify',otpController.verifyRegistrationOtp);
