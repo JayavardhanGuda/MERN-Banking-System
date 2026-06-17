@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const path = require('path');
 
 // ── Security packages ──────────────────────────────────────────────────────
 const helmet = require('helmet');
@@ -79,6 +80,15 @@ app.use('/api/application-status', applicationStatusRoutes);
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'VJN Banking API is running' });
+});
+
+// ── SERVE REACT FRONTEND ──────────────────────────────────────────────────
+const frontendDist = path.join(__dirname, '..', 'frontend', 'dist');
+app.use(express.static(frontendDist));
+
+// Catch-all: send index.html for any non-API route (React Router handles it)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
 // Start server
