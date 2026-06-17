@@ -1,4 +1,4 @@
-// API Base URL (use Vite env var when available). Default matches backend PORT=4000
+// API Base URL — relative path works in production (same domain), falls back to localhost in dev
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
 
 // Get regular user auth token
@@ -6,9 +6,9 @@ function getAuthToken() {
   return localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
 }
 
-// Get admin JWT token (stored in sessionStorage on admin login)
+// Get admin JWT token (stored in localStorage on admin login)
 function getAdminToken() {
-  return sessionStorage.getItem('adminToken');
+  return localStorage.getItem('adminToken');
 }
 
 /**

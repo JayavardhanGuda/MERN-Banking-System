@@ -45,7 +45,7 @@ export default function Header() {
       setCurrentUser(user ? JSON.parse(user) : null);
       
       // Check for admin session
-      const admin = sessionStorage.getItem("adminSession");
+      const admin = localStorage.getItem("adminSession");
       setAdminSession(admin ? JSON.parse(admin) : null);
     };
 
@@ -81,7 +81,7 @@ export default function Header() {
 
     // Handle admin logout
     if (adminSession) {
-      sessionStorage.removeItem("adminSession");
+      localStorage.removeItem("adminSession");
       setAdminSession(null);
       window.dispatchEvent(new Event('userSessionChanged'));
       navigate("/", { replace: true });

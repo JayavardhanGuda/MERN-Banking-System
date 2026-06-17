@@ -92,8 +92,8 @@ export default function Login() {
         const adminResponse = await adminLogin({ username, password });
 
         if (adminResponse.success) {
-          sessionStorage.setItem('adminToken', adminResponse.token);
-          sessionStorage.setItem('adminSession', JSON.stringify({
+          localStorage.setItem('adminToken', adminResponse.token);
+          localStorage.setItem('adminSession', JSON.stringify({
             isAdmin: true,
             username: adminResponse.data.username,
             loginTime: new Date().toISOString()

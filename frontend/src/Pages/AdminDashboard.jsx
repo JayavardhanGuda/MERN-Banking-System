@@ -563,7 +563,7 @@ export default function AdminDashboard() {
 
   // Check admin authentication on mount
   useEffect(() => {
-    const adminSession = sessionStorage.getItem('adminSession')
+    const adminSession = localStorage.getItem('adminSession')
     if (!adminSession) {
       navigate('/login', { replace: true })
       return
@@ -583,7 +583,7 @@ export default function AdminDashboard() {
 
   // Admin logout handler
   const handleAdminLogout = () => {
-    sessionStorage.removeItem('adminSession')
+    localStorage.removeItem('adminSession')
     navigate('/', { replace: true })
   }
 
