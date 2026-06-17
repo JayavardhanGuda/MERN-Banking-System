@@ -9,7 +9,7 @@ import {
   FaPhoneAlt, FaEnvelope, FaMapMarkerAlt,
   FaArrowRight, FaCheckCircle
 } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import '../styles/Home.css'
 
 /* ── Count-up hook ── */
@@ -89,6 +89,7 @@ function StatsStrip() {
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const navigate = useNavigate()
 
   const slides = [
     {
@@ -203,35 +204,53 @@ export default function Home() {
                   icon: <FaClipboardList />,
                   title: 'Service Request',
                   desc: 'Submit and track your banking service requests online.',
-                  link: '/service-request',
-                  color: '#c9a84c'
+                  color: '#c9a84c',
+                  onClick: () => navigate('/user-dashboard', { state: { section: 'service' } })
                 },
                 {
                   icon: <FaLock />,
                   title: 'Smart Lock',
                   desc: 'Instantly lock or unlock your account for added security.',
-                  link: '/smart-lock',
-                  color: '#1a2f6b'
+                  color: '#1a2f6b',
+                  onClick: () => navigate('/user-dashboard', { state: { section: 'smartlock' } })
                 },
                 {
                   icon: <FaExclamationTriangle />,
                   title: 'Report Fraud',
                   desc: 'Report suspicious activity and protect your finances.',
-                  link: '/report-fraud',
-                  color: '#e05252'
+                  color: '#e05252',
+                  link: '/report-fraud'
                 },
               ].map((svc, i) => (
                 <div key={i} className="col-md-4 col-sm-6">
-                  <Link to={svc.link} className="home-service-card text-decoration-none">
-                    <div className="home-service-card__icon" style={{ color: svc.color }}>
-                      {svc.icon}
-                    </div>
-                    <h3 className="home-service-card__title">{svc.title}</h3>
-                    <p className="home-service-card__desc">{svc.desc}</p>
-                    <span className="home-service-card__arrow" style={{ color: svc.color }}>
-                      Learn more <FaArrowRight />
-                    </span>
-                  </Link>
+                  {svc.onClick ? (
+                    <button
+                      type="button"
+                      className="home-service-card text-decoration-none"
+                      onClick={svc.onClick}
+                      style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer' }}
+                    >
+                      <div className="home-service-card__icon" style={{ color: svc.color }}>
+                        {svc.icon}
+                      </div>
+                      <h3 className="home-service-card__title">{svc.title}</h3>
+                      <p className="home-service-card__desc">{svc.desc}</p>
+                      <span className="home-service-card__arrow" style={{ color: svc.color }}>
+                        Learn more <FaArrowRight />
+                      </span>
+                    </button>
+                  ) : (
+                    <Link to={svc.link} className="home-service-card text-decoration-none">
+                      <div className="home-service-card__icon" style={{ color: svc.color }}>
+                        {svc.icon}
+                      </div>
+                      <h3 className="home-service-card__title">{svc.title}</h3>
+                      <p className="home-service-card__desc">{svc.desc}</p>
+                      <span className="home-service-card__arrow" style={{ color: svc.color }}>
+                        Learn more <FaArrowRight />
+                      </span>
+                    </Link>
+                  )}
                 </div>
               ))}
             </div>

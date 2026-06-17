@@ -19,7 +19,9 @@ import '../styles/Dashboard.css'
 export default function UserDashboard() {
   const location = useLocation()
   const [activeSection, setActiveSection] = useState(
-    location.state?.openTransfer ? 'transfer' : 'details'
+    location.state?.section === 'service'   ? 'service'   :
+    location.state?.section === 'smartlock' ? 'smartlock' :
+    location.state?.openTransfer            ? 'transfer'  : 'details'
   )
   const [currentUser, setCurrentUser] = useState(null)
   const [statement, setStatement] = useState(null)

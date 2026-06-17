@@ -1173,3 +1173,285 @@
   }
 }
 
+
+/* ============================================================
+   Terms & Privacy Policy Modal
+   ============================================================ */
+
+/* Inline link button inside checkbox label */
+.reg-modal-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+  font-family: inherit;
+  line-height: inherit;
+}
+
+.reg-modal-link:hover {
+  color: var(--accent-dark);
+}
+
+/* ── Overlay ── */
+.reg-policy-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  background: rgba(8, 15, 40, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: regOverlayIn 0.25s ease forwards;
+}
+
+/* ── Modal card ── */
+.reg-policy-modal {
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 640px;
+  width: 100%;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 32px 80px rgba(8, 15, 40, 0.42),
+    0 0 0 1px rgba(201, 168, 76, 0.2);
+  overflow: hidden;
+  animation: regModalIn 0.32s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+}
+
+/* Gold shimmer top bar */
+.reg-policy-modal__bar {
+  height: 4px;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, var(--primary-dark), var(--accent), var(--accent-light), var(--accent));
+  background-size: 200% 100%;
+  animation: regBarShimmer 2.5s linear infinite;
+}
+
+/* ── Header ── */
+.reg-policy-modal__header {
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid var(--border-light);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 100%);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.reg-policy-modal__title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 4px;
+  padding-right: 40px;
+}
+
+.reg-policy-modal__subtitle {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+}
+
+.reg-policy-modal__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.reg-policy-modal__close:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  transform: scale(1.08);
+}
+
+/* ── Scrollable body ── */
+.reg-policy-modal__body {
+  overflow-y: auto;
+  padding: 24px 28px;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+}
+
+.reg-policy-modal__body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.reg-policy-modal__body::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.45);
+  border-radius: 3px;
+}
+
+/* ── Policy sections ── */
+.reg-policy-section {
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.reg-policy-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.reg-policy-section h3 {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--accent-dark);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reg-policy-section h3::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.reg-policy-section p {
+  font-size: 0.88rem;
+  color: var(--text-light);
+  line-height: 1.75;
+  margin: 0;
+}
+
+.reg-policy-section p strong {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+/* ── Footer buttons ── */
+.reg-policy-modal__footer {
+  display: flex;
+  gap: 12px;
+  padding: 18px 28px;
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-lighter);
+  flex-shrink: 0;
+}
+
+.reg-policy-modal__accept-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 100%);
+  color: #ffffff;
+  border: none;
+  padding: 13px 20px;
+  border-radius: var(--radius-md);
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(13, 27, 62, 0.25);
+  letter-spacing: 0.3px;
+}
+
+.reg-policy-modal__accept-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(13, 27, 62, 0.32);
+  background: linear-gradient(135deg, var(--primary-mid) 0%, var(--primary-light) 100%);
+}
+
+.reg-policy-modal__close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--text-light);
+  border: 2px solid var(--border-light);
+  padding: 13px 24px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.reg-policy-modal__close-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-dark);
+  background: rgba(201, 168, 76, 0.06);
+}
+
+/* ── Dark mode overrides ── */
+[data-theme="dark"] .reg-policy-modal {
+  background: #1e2336;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(224, 184, 78, 0.2);
+}
+
+[data-theme="dark"] .reg-policy-modal__body {
+  scrollbar-color: rgba(224, 184, 78, 0.45) transparent;
+}
+
+[data-theme="dark"] .reg-policy-section {
+  border-bottom-color: #2a3050;
+}
+
+[data-theme="dark"] .reg-policy-section p {
+  color: #8a95b4;
+}
+
+[data-theme="dark"] .reg-policy-section p strong {
+  color: #c0caf5;
+}
+
+[data-theme="dark"] .reg-policy-modal__footer {
+  background: #171b27;
+  border-top-color: #2a3050;
+}
+
+[data-theme="dark"] .reg-policy-modal__close-btn {
+  color: #8a95b4;
+  border-color: #2a3050;
+}
+
+[data-theme="dark"] .reg-policy-modal__close-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(224, 184, 78, 0.08);
+}
+
+/* ── Responsive ── */
+@media (max-width: 560px) {
+  .reg-policy-modal__footer {
+    flex-direction: column;
+  }
+
+  .reg-policy-modal__title { font-size: 1.1rem; }
+  .reg-policy-modal__header { padding: 20px 20px 16px; }
+  .reg-policy-modal__body  { padding: 18px 20px; }
+  .reg-policy-modal__footer { padding: 14px 20px; }
+}

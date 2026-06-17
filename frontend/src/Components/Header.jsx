@@ -3,13 +3,39 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaUser, FaPiggyBank, FaCreditCard, FaShieldAlt, FaClipboardList } from "react-icons/fa";
 import "../styles/Header.css";
 
+// ── Theme helpers ─────────────────────────────────────────
+const THEME_KEY = "vjn-theme";
+
+function getInitialTheme() {
+  const stored = localStorage.getItem(THEME_KEY);
+  if (stored) return stored;
+  // Respect OS preference on first visit
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem(THEME_KEY, theme);
+}
+// ─────────────────────────────────────────────────────────
+
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentUser, setCurrentUser] = useState(null);
   const [adminSession, setAdminSession] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [theme, setTheme] = useState(getInitialTheme);
   const profileMenuRef = useRef(null);
+
+  // Apply theme on mount and whenever it changes
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === "light" ? "dark" : "light");
+  };
 
   // Check for user/admin on every location change to ensure real-time updates
   useEffect(() => {
@@ -143,6 +169,19 @@ export default function Header() {
               onClick={() => handleScrollToSection("contact-us")}
             >
               Contact Us
+            </button>
+
+            {/* Dark / Light mode toggle */}
+            <button
+              type="button"
+              className="theme-toggle-btn"
+              onClick={toggleTheme}
+              aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+            >
+              <span className="theme-toggle-thumb">
+                <span className="toggle-icon-sun">☀️</span>
+                <span className="toggle-icon-moon">🌙</span>
+              </span>
             </button>
 
             {/* Profile */}

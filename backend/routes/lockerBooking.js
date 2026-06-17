@@ -1,41 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const lockerController = require('../controllers/lockerBookingController');
+const LockerBooking = require('../models/LockerBooking');
+const User = require('../models/User');
 
-// Book locker
-router.post('/', lockerController.bookLocker);
+// ── Config ─────────────────────────────────────────────────────────────────
 
-// Get all locker bookings (admin)
-router.get('/', lockerController.getAllLockerBookings);
-
-// Get pending locker bookings (admin)
-router.get('/pending', lockerController.getPendingLockerBookings);
-
-// Get pending locker count
-router.get('/pending/count', lockerController.getPendingLockerCount);
-
-// Get locker bookings by account
-router.get('/account/:accountNumber', lockerController.getLockerBookingsByAccount);
-
-// Approve locker booking
-router.put('/:bookingId/approve', lockerController.approveLockerBooking);
-
-// Reject locker booking
-router.put('/:bookingId/reject', lockerController.rejectLockerBooking);
-
-// Cancel locker booking
-router.delete('/:bookingId', lockerController.cancelLockerBooking);
-
-module.exports = router;
-
-// Locker type configurations
 const LOCKER_CONFIG = {
   Small:  { size: '30×20×15 cm', rent: 500 },
   Medium: { size: '45×30×20 cm', rent: 900 },
   Large:  { size: '60×40×30 cm', rent: 1400 }
 };
 
-// Generate unique locker number
 function generateLockerNumber(type, accountNumber) {
   const typeCode = type.charAt(0).toUpperCase();
   const timestamp = Date.now().toString().slice(-6);
@@ -43,38 +18,34 @@ function generateLockerNumber(type, accountNumber) {
   return `LOCK-${typeCode}-${accountSuffix}-${timestamp}`;
 }
 
-// Generate assigned locker number (after approval)
 function generateAssignedLockerNumber(type) {
   const typeCode = type.charAt(0).toUpperCase();
   const random = Math.floor(1000 + Math.random() * 9000);
   return `VJN-${typeCode}${random}`;
 }
 
-// Book locker (creates pending request)
+// ── Routes ──────────────────────────────────────────────────────────────────
+
+// POST / — Book locker (creates pending request)
 router.post('/', async (req, res) => {
   try {
     const { accountNumber, userName, lockerType, itemDetails, approximateValue, purpose, duration } = req.body;
 
-    // Validate required fields
     if (!accountNumber || !lockerType) {
       return res.status(400).json({ success: false, message: 'Account number and locker type are required' });
     }
 
-    // Check if user exists and is approved
     const user = await User.findOne({ accountNumber });
     if (!user) {
       return res.status(404).json({ success: false, message: 'Account not found' });
     }
 
-    // Check for existing pending request
-    const existingPending = await LockerBooking.findOne({ 
-      accountNumber, 
-      status: 'Pending' 
-    });
+    // Block duplicate pending requests
+    const existingPending = await LockerBooking.findOne({ accountNumber, status: 'Pending' });
     if (existingPending) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'You already have a pending locker request. Please wait for admin approval.' 
+      return res.status(400).json({
+        success: false,
+        message: 'You already have a pending locker request. Please wait for admin approval.'
       });
     }
 
@@ -111,7 +82,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all locker bookings (for admin)
+// GET / — Get all locker bookings (admin)
 router.get('/', async (req, res) => {
   try {
     const { status } = req.query;
@@ -123,17 +94,17 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get pending locker requests count (for admin notifications)
+// GET /pending/count — Pending count for admin notifications
 router.get('/pending/count', async (req, res) => {
   try {
     const count = await LockerBooking.countDocuments({ status: 'Pending' });
-    res.json({ success: true, count });
+    res.json({ success: true, count, data: { count } });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
-// Get all pending locker requests (for admin)
+// GET /pending — All pending requests (admin)
 router.get('/pending', async (req, res) => {
   try {
     const bookings = await LockerBooking.find({ status: 'Pending' }).sort({ createdAt: -1 });
@@ -143,7 +114,7 @@ router.get('/pending', async (req, res) => {
   }
 });
 
-// Get bookings by account number
+// GET /account/:accountNumber — Bookings by account
 router.get('/account/:accountNumber', async (req, res) => {
   try {
     const bookings = await LockerBooking.find({ accountNumber: req.params.accountNumber }).sort({ createdAt: -1 });
@@ -153,7 +124,7 @@ router.get('/account/:accountNumber', async (req, res) => {
   }
 });
 
-// Get single booking by ID
+// GET /:id — Single booking
 router.get('/:id', async (req, res) => {
   try {
     const booking = await LockerBooking.findById(req.params.id);
@@ -166,11 +137,11 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Admin: Approve locker request
+// PUT /:id/approve — Admin: approve locker request
 router.put('/:id/approve', async (req, res) => {
   try {
     const { adminRemarks, assignedBranch } = req.body;
-    
+
     const booking = await LockerBooking.findById(req.params.id);
     if (!booking) {
       return res.status(404).json({ success: false, message: 'Booking not found' });
@@ -180,10 +151,7 @@ router.put('/:id/approve', async (req, res) => {
       return res.status(400).json({ success: false, message: `Cannot approve a ${booking.status.toLowerCase()} request` });
     }
 
-    // Generate assigned locker number
     const assignedLockerNumber = generateAssignedLockerNumber(booking.lockerType);
-    
-    // Calculate expiry date (1 year from approval)
     const expiresAt = new Date();
     expiresAt.setFullYear(expiresAt.getFullYear() + 1);
 
@@ -203,32 +171,27 @@ router.put('/:id/approve', async (req, res) => {
       { new: true }
     );
 
-    // Update user record with locker info
+    // Reflect locker info on the user record
     await User.findOneAndUpdate(
       { accountNumber: booking.accountNumber },
       {
         lockerNumber: assignedLockerNumber,
-        lockerType: booking.lockerType,
-        lockerBooking: updatedBooking
+        lockerType: booking.lockerType
       }
     );
 
-    res.json({
-      success: true,
-      message: 'Locker request approved successfully',
-      data: updatedBooking
-    });
+    res.json({ success: true, message: 'Locker request approved successfully', data: updatedBooking });
   } catch (error) {
     console.error('Approve locker error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
-// Admin: Reject locker request
+// PUT /:id/reject — Admin: reject locker request
 router.put('/:id/reject', async (req, res) => {
   try {
     const { rejectionReason, adminRemarks } = req.body;
-    
+
     const booking = await LockerBooking.findById(req.params.id);
     if (!booking) {
       return res.status(404).json({ success: false, message: 'Booking not found' });
@@ -251,18 +214,14 @@ router.put('/:id/reject', async (req, res) => {
       { new: true }
     );
 
-    res.json({
-      success: true,
-      message: 'Locker request rejected',
-      data: updatedBooking
-    });
+    res.json({ success: true, message: 'Locker request rejected', data: updatedBooking });
   } catch (error) {
     console.error('Reject locker error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
-// User: Cancel locker booking
+// DELETE /:id — User: cancel booking
 router.delete('/:id', async (req, res) => {
   try {
     const booking = await LockerBooking.findById(req.params.id);

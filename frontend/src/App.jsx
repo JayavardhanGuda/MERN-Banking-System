@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import ScrollToTop from './Components/ScrollToTop'
 import PageLoader from './Components/PageLoader'
 import Home from './Pages/Home'
@@ -10,9 +10,6 @@ import Login from './Pages/Login'
 import AdminDashboard from './Pages/AdminDashboard'
 import UserDashboard from './Pages/UserDashboard'
 import InternetBankingRegister from './Pages/InternetBankingRegister'
-import ServiceRequest from './Pages/ServiceRequest'
-import SmartLock from './Pages/SmartLock'
-import LockerBookings from './Pages/LockerBookings'
 import ReportFraud from './Pages/ReportFraud'
 import ComingSoon from './Pages/ComingSoon'
 import ApplicationStatus from './Pages/ApplicationStatus'
@@ -35,9 +32,9 @@ function AppRoutes() {
         <Route path="/savings-account"           element={<SavingsAccount />} />
         <Route path="/register"                  element={<Register />} />
         <Route path="/internet-banking-register" element={<InternetBankingRegister />} />
-        <Route path="/service-request"           element={<ServiceRequest />} />
-        <Route path="/smart-lock"                element={<SmartLock />} />
-        <Route path="/locker-bookings"           element={<LockerBookings />} />
+        <Route path="/service-request"           element={<Navigate to="/user-dashboard" state={{ section: 'service' }} replace />} />
+        <Route path="/smart-lock"                element={<Navigate to="/user-dashboard" state={{ section: 'smartlock' }} replace />} />
+        <Route path="/locker-bookings"           element={<Navigate to="/user-dashboard" replace />} />
         <Route path="/report-fraud"              element={<ReportFraud />} />
         <Route path="/cards"                     element={<ComingSoon />} />
         <Route path="/insurance"                 element={<ComingSoon />} />

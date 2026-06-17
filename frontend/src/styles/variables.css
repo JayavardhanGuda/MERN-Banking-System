@@ -1,14 +1,17 @@
-/* Color Variables */
+/* ============================================================
+   Design Tokens — Light Mode (default)
+   ============================================================ */
 :root {
   /* Brand palette – deep navy + gold */
-  --primary-dark:   #0d1b3e;   /* deep navy */
-  --primary-mid:    #1a2f6b;   /* mid navy */
-  --primary-light:  #2a4494;   /* bright navy */
-  --accent:         #c9a84c;   /* rich gold */
-  --accent-dark:    #a8872e;   /* deep gold */
-  --accent-light:   #e8c96a;   /* light gold */
+  --primary-dark:   #0d1b3e;
+  --primary-mid:    #1a2f6b;
+  --primary-light:  #2a4494;
+  --accent:         #c9a84c;
+  --accent-dark:    #a8872e;
+  --accent-light:   #e8c96a;
   --accent-glow:    rgba(201,168,76,0.25);
 
+  /* Semantic surface / text tokens (overridden in dark mode) */
   --text-dark:      #1a1a2e;
   --text-light:     #5a6480;
   --text-muted:     #c8cfe0;
@@ -19,12 +22,20 @@
   --white:          #ffffff;
   --error:          #e05252;
 
+  /* Dark-mode surface palette (unused in light, declared for reference) */
+  --dm-bg:          #0f1117;
+  --dm-surface:     #171b27;
+  --dm-surface-2:   #1e2336;
+  --dm-border:      #2a3050;
+  --dm-text:        #e2e8f8;
+  --dm-text-sub:    #8a95b4;
+
   /* Spacing */
-  --spacing-xs: 8px;
-  --spacing-sm: 12px;
-  --spacing-md: 15px;
-  --spacing-lg: 20px;
-  --spacing-xl: 30px;
+  --spacing-xs:  8px;
+  --spacing-sm:  12px;
+  --spacing-md:  15px;
+  --spacing-lg:  20px;
+  --spacing-xl:  30px;
   --spacing-2xl: 40px;
   --spacing-3xl: 50px;
   --spacing-4xl: 60px;
@@ -38,7 +49,7 @@
   /* Z-index */
   --z-overlay: 998;
   --z-sidebar: 999;
-  --z-header: 1000;
+  --z-header:  1000;
 
   /* Transitions */
   --transition-fast: 0.2s ease;
@@ -46,7 +57,34 @@
   --transition-slow: 0.5s ease;
 }
 
+/* ============================================================
+   Dark Mode Token Overrides
+   Applied when <html data-theme="dark">
+   ============================================================ */
+[data-theme="dark"] {
+  --primary-dark:   #1a2550;   /* slightly lighter navy so it reads on dark bg */
+  --primary-mid:    #243470;
+  --primary-light:  #3358b8;
+  --accent:         #e0b84e;   /* slightly brighter gold on dark */
+  --accent-dark:    #c9a030;
+  --accent-light:   #f0d070;
+  --accent-glow:    rgba(224,184,78,0.30);
+
+  --text-dark:      #e2e8f8;
+  --text-light:     #8a95b4;
+  --text-muted:     #4a5270;
+  --border-light:   #2a3050;
+  --bg-light:       #0f1117;
+  --bg-lighter:     #0f1117;
+  --bg-card:        #1e2336;
+  --white:          #171b27;   /* "white" surfaces become dark in dark mode */
+  --error:          #ff6b6b;
+}
+
 /* Font Families */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

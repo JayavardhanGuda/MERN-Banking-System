@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 import Breadcrumbs from '../Components/Breadcrumbs';
 import { bookLocker, getLockerBookings } from '../services/api';
 import {
   FaLock, FaCheck, FaCheckCircle, FaBox,
-  FaUser, FaIdCard, FaEnvelope, FaHistory,
+  FaUser, FaIdCard, FaEnvelope,
   FaSpinner, FaExclamationCircle, FaClock
 } from 'react-icons/fa';
 import '../styles/SmartLock.css';
@@ -207,11 +207,7 @@ export default function SmartLock({ embedded = false }) {
             </div>
           )}
 
-          {!embedded && (
-            <Link to="/locker-bookings" className="sl-history-link">
-              <FaHistory /> View My Bookings
-            </Link>
-          )}
+
         </div>
 
         {/* Right — booking form */}

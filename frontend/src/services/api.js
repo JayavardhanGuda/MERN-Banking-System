@@ -481,26 +481,6 @@ export async function logLogout(data) {
   });
 }
 
-// ============ REPORT FRAUD APIs ============
-
-// Report fraud
-export async function reportFraud(data) {
-  return apiCall('/report-fraud', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  });
-}
-
-// ============ FEEDBACK APIs ============
-
-// Submit feedback
-export async function submitFeedback(data) {
-  return apiCall('/feedback', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  });
-}
-
 export default {
   registerAccount,
   loginUser,
@@ -544,6 +524,4 @@ export default {
   rejectAccount,
   checkApplicationStatus,
   logLogout,
-  reportFraud,
-  submitFeedback,
 };

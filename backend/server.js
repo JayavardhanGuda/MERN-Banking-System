@@ -81,8 +81,6 @@ const internetBankingRoutes = require('./routes/internetBanking');
 const serviceRequestRoutes = require('./routes/serviceRequest');
 const logoutHistoryRoutes = require('./routes/logoutHistory');
 const otpRoutes = require('./routes/otp');
-const reportFraudRoutes = require('./routes/reportFraud');
-const feedbackRoutes = require('./routes/feedback');
 const adminRoutes = require('./routes/admin');
 const applicationStatusRoutes = require('./routes/applicationStatus');
 
@@ -95,8 +93,6 @@ app.use('/api/internet-banking', internetBankingRoutes);
 app.use('/api/service-requests', serviceRequestRoutes);
 app.use('/api/logout-history', logoutHistoryRoutes);
 app.use('/api/otp', otpRoutes);
-app.use('/api/report-fraud', reportFraudRoutes);
-app.use('/api/feedback', feedbackRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/application-status', applicationStatusRoutes);
 

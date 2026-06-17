@@ -85,6 +85,8 @@ export default function Register() {
   const [aadhaarFile, setAadhaarFile]                 = useState(null);
   const [showSuccess, setShowSuccess]                 = useState(false);
   const [registeredAccount, setRegisteredAccount]     = useState(null);
+  const [showTermsModal, setShowTermsModal]           = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal]       = useState(false);
 
   // Email OTP verification states
   const [emailOtp, setEmailOtp] = useState('');
@@ -832,7 +834,7 @@ export default function Register() {
                       <input type="checkbox" name="agreeToTerms"
                         checked={formData.agreeToTerms} onChange={handleInputChange} />
                       <span className="checkmark" />
-                      I agree to the <a href="#terms" target="_blank" rel="noreferrer">Terms and Conditions</a> *
+                      I agree to the <button type="button" className="reg-modal-link" onClick={() => setShowTermsModal(true)}>Terms and Conditions</button> *
                     </label>
                     {errors.agreeToTerms && <span className="error-message">{errors.agreeToTerms}</span>}
                   </div>
@@ -841,7 +843,7 @@ export default function Register() {
                       <input type="checkbox" name="agreeToPrivacy"
                         checked={formData.agreeToPrivacy} onChange={handleInputChange} />
                       <span className="checkmark" />
-                      I agree to the <a href="#privacy" target="_blank" rel="noreferrer">Privacy Policy</a> *
+                      I agree to the <button type="button" className="reg-modal-link" onClick={() => setShowPrivacyModal(true)}>Privacy Policy</button> *
                     </label>
                     {errors.agreeToPrivacy && <span className="error-message">{errors.agreeToPrivacy}</span>}
                   </div>
@@ -993,6 +995,147 @@ export default function Register() {
               You will be notified via email once your account is approved.
             </p>
  
+          </div>
+        </div>
+      )}
+      {/* ── Terms & Conditions Modal ── */}
+      {showTermsModal && (
+        <div className="reg-policy-overlay" onClick={() => setShowTermsModal(false)}>
+          <div className="reg-policy-modal" onClick={e => e.stopPropagation()}>
+            <div className="reg-policy-modal__bar" />
+            <div className="reg-policy-modal__header">
+              <h2 className="reg-policy-modal__title">Terms and Conditions</h2>
+              <p className="reg-policy-modal__subtitle">VJN Cooperative Bank — Last updated: June 2026</p>
+              <button className="reg-policy-modal__close" onClick={() => setShowTermsModal(false)} aria-label="Close">✕</button>
+            </div>
+            <div className="reg-policy-modal__body">
+              <section className="reg-policy-section">
+                <h3>1. Acceptance of Terms</h3>
+                <p>By opening an account with VJN Cooperative Bank, you confirm that you have read, understood, and agree to be bound by these Terms and Conditions. These terms govern your use of our banking services and all related digital platforms.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>2. Eligibility</h3>
+                <p>To open a savings account, you must be at least 18 years of age, a resident of India, and provide valid KYC documents including a PAN card and Aadhaar card. Joint accounts may be opened by two or more eligible individuals.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>3. Account Operations</h3>
+                <p>You are responsible for all transactions conducted using your account credentials. Minimum balance requirements apply as per prevailing bank policy. The bank reserves the right to freeze or terminate accounts found to be involved in fraudulent activity.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>4. Internet Banking</h3>
+                <p>Access to internet banking services is subject to successful KYC verification and account activation. You must keep your login credentials confidential. The bank shall not be liable for unauthorised transactions arising from disclosure of credentials by the account holder.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>5. Fund Transfers</h3>
+                <p>All fund transfers are processed in real time subject to system availability. Transaction limits apply as set by the bank. You must verify recipient details before confirming any transfer. Transactions once executed cannot be reversed.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>6. Fees and Charges</h3>
+                <p>Service charges, if applicable, will be communicated to you in advance. The bank may revise its fee structure with 30 days' prior notice. Charges will be debited directly from your account.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>7. Locker Services</h3>
+                <p>Safe deposit locker services are subject to availability and approval by bank management. Annual locker rent must be paid in advance. The bank is not liable for the contents of the locker except in cases of negligence on its part.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>8. Termination</h3>
+                <p>The bank reserves the right to close your account with adequate notice if you violate these Terms and Conditions, provide false information, or engage in activities that are unlawful or harmful to the bank or its customers.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>9. Governing Law</h3>
+                <p>These Terms and Conditions are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of the courts in Chennai, Tamil Nadu.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>10. Contact</h3>
+                <p>For queries regarding these terms, contact us at <strong>support@vjnbank.in</strong> or call our toll-free number <strong>1800-XXX-XXXX</strong> (Mon–Sat, 9 AM–6 PM).</p>
+              </section>
+            </div>
+            <div className="reg-policy-modal__footer">
+              <button
+                className="reg-policy-modal__accept-btn"
+                onClick={() => {
+                  setFormData(prev => ({ ...prev, agreeToTerms: true }));
+                  setErrors(prev => ({ ...prev, agreeToTerms: '' }));
+                  setShowTermsModal(false);
+                }}
+              >
+                <FaCheck /> I Accept the Terms
+              </button>
+              <button className="reg-policy-modal__close-btn" onClick={() => setShowTermsModal(false)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Privacy Policy Modal ── */}
+      {showPrivacyModal && (
+        <div className="reg-policy-overlay" onClick={() => setShowPrivacyModal(false)}>
+          <div className="reg-policy-modal" onClick={e => e.stopPropagation()}>
+            <div className="reg-policy-modal__bar" />
+            <div className="reg-policy-modal__header">
+              <h2 className="reg-policy-modal__title">Privacy Policy</h2>
+              <p className="reg-policy-modal__subtitle">VJN Cooperative Bank — Last updated: June 2026</p>
+              <button className="reg-policy-modal__close" onClick={() => setShowPrivacyModal(false)} aria-label="Close">✕</button>
+            </div>
+            <div className="reg-policy-modal__body">
+              <section className="reg-policy-section">
+                <h3>1. Information We Collect</h3>
+                <p>We collect personal information you provide during account registration, including your name, date of birth, email address, phone number, residential address, government-issued ID documents (PAN card, Aadhaar card), and financial information such as your initial deposit amount.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>2. How We Use Your Information</h3>
+                <p>Your information is used to: process your account application and KYC verification; provide and manage your banking services; communicate important service updates, statements, and alerts; comply with RBI regulations and anti-money laundering requirements; and improve the quality of our products and services.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>3. Data Storage and Security</h3>
+                <p>All personal data is stored on secure, encrypted servers located within India. We implement industry-standard security measures including SSL encryption, two-factor authentication, and regular security audits to protect your information from unauthorised access, disclosure, or loss.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>4. Sharing of Information</h3>
+                <p>We do not sell, rent, or trade your personal information to third parties. We may share your information with: regulatory authorities as required by law; credit bureaus for credit assessment purposes; and trusted service providers who assist us in operating our banking systems, under strict confidentiality agreements.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>5. KYC Documents</h3>
+                <p>Documents uploaded during registration (PAN card and Aadhaar card) are used solely for identity verification as mandated by the Reserve Bank of India. They are stored securely and accessible only to authorised bank personnel for verification purposes.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>6. Cookies and Digital Tracking</h3>
+                <p>Our website may use cookies to enhance your browsing experience and analyse website traffic. You may disable cookies through your browser settings, though this may affect the functionality of certain features.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>7. Your Rights</h3>
+                <p>You have the right to: access the personal information we hold about you; request correction of inaccurate data; withdraw consent for marketing communications at any time; and request deletion of your account subject to applicable regulatory requirements.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>8. Retention Period</h3>
+                <p>We retain your personal data for the duration of your account relationship and for a minimum of 5 years thereafter, as required by banking regulations and the Prevention of Money Laundering Act (PMLA).</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>9. Changes to This Policy</h3>
+                <p>We may update this Privacy Policy periodically. Changes will be communicated via email and posted on our website. Continued use of our services after changes constitutes acceptance of the revised policy.</p>
+              </section>
+              <section className="reg-policy-section">
+                <h3>10. Contact Us</h3>
+                <p>For privacy-related concerns or data requests, contact our Data Protection Officer at <strong>privacy@vjnbank.in</strong> or write to us at 123, Bank Street, Chennai, Tamil Nadu – 600001.</p>
+              </section>
+            </div>
+            <div className="reg-policy-modal__footer">
+              <button
+                className="reg-policy-modal__accept-btn"
+                onClick={() => {
+                  setFormData(prev => ({ ...prev, agreeToPrivacy: true }));
+                  setErrors(prev => ({ ...prev, agreeToPrivacy: '' }));
+                  setShowPrivacyModal(false);
+                }}
+              >
+                <FaCheck /> I Accept the Privacy Policy
+              </button>
+              <button className="reg-policy-modal__close-btn" onClick={() => setShowPrivacyModal(false)}>
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
