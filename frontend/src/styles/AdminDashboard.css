@@ -2059,16 +2059,23 @@
 /* Service Request Stats Row */
 .adm-stat-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin-bottom: 24px;
+  /* allow four compact cards in a single row */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .adm-stat-row .adm-stat {
-  padding: 22px 20px;
-  border-radius: 16px;
+  /* slightly reduced padding so four cards fit comfortably */
+  padding: 16px 12px;
+  border-radius: 12px;
   position: relative;
   overflow: hidden;
+}
+
+.adm-stat-row .adm-stat .adm-stat__val {
+  /* smaller numeric size for compact row */
+  font-size: 1.4rem;
 }
 
 .adm-stat-row .adm-stat::before {

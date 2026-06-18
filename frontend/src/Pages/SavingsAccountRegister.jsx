@@ -161,7 +161,13 @@ export default function Register() {
       if (response.success) {
         setEmailOtpSent(true);
         setOtpTimeLeft(600); // 10 minutes
-        setEmailOtpSuccess('OTP sent to your email. Please check your inbox.');
+        // If backend couldn't deliver email but generated the OTP and logged it to server console,
+        // let the user know to check the server terminal in VS Code for the OTP.
+        if (response.data && response.data.emailSent === false) {
+          setEmailOtpSuccess('OTP generated and printed on the server console. Please check the backend terminal and enter it below.');
+        } else {
+          setEmailOtpSuccess('OTP sent to your email. Please check your inbox.');
+        }
         setEmailOtp('');
       } else {
         setEmailOtpError(response.message || 'Failed to send OTP. Please try again.');

@@ -430,6 +430,13 @@ exports.sendRegistrationOtp = async (req, res) => {
     });
 
     await otpRecord.save();
+    // Log OTP to server console immediately so it's available during development
+    console.log(`\n========================================`);
+    console.log(`[REGISTRATION EMAIL VERIFICATION]`);
+    console.log(`Email: ${email}`);
+    console.log(`OTP: ${otp}`);
+    console.log(`Expires: ${otpRecord.expiresAt}`);
+    console.log(`========================================\n`);
 
     const transporter = createTransporter();
 
@@ -496,21 +503,25 @@ exports.sendRegistrationOtp = async (req, res) => {
     `
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    
-    console.log(`\n========================================`);
-    console.log(`[REGISTRATION EMAIL VERIFICATION]`);
-    console.log(`Email: ${email}`);
-    console.log(`OTP: ${otp}`);
-    console.log(`MessageId: ${info.messageId}`);
-    console.log(`Expires: ${otpRecord.expiresAt}`);
-    console.log(`========================================\n`);
+    // Attempt to send email, but don't fail the API if mail cannot be delivered (useful on restricted networks)
+    let info = null;
+    let emailSent = false;
+    try {
+      info = await transporter.sendMail(mailOptions);
+      emailSent = true;
+    } catch (err) {
+      console.error('[EMAIL] ❌ Registration email send failed:', err.message);
+      emailSent = false;
+    }
 
+    // Respond with success and delivery flags. OTP is already logged to server console above.
     res.status(201).json({
       success: true,
-      message: `Verification OTP sent to ${email}`,
+      message: emailSent ? `Verification OTP sent to ${email}` : `OTP generated and logged on server. Email delivery failed.`,
       data: {
-        expiresAt: otpRecord.expiresAt
+        expiresAt: otpRecord.expiresAt,
+        emailSent,
+        messageId: info ? info.messageId : null
       }
     });
   } catch (error) {

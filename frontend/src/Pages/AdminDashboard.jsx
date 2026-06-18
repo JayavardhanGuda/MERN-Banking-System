@@ -874,6 +874,7 @@ export default function AdminDashboard() {
                   {activeTab === 'approved' && 'Approved Accounts'}
                   {activeTab === 'removed'  && 'Removed / Rejected Accounts'}
                   {activeTab === 'lockers'  && 'Locker Booking Requests'}
+                    {activeTab === 'services' && 'Service Requests'}
                 </h1>
               </div>
               <div className="adm-search">
@@ -889,8 +890,8 @@ export default function AdminDashboard() {
             </div>
 
             {/* Stats strip */}
-            {/* Stats strip - only show for account tabs */}
-            {activeTab !== 'lockers' && (
+            {/* Stats strip - only show for account tabs (pending/approved/removed) */}
+            {['pending', 'approved', 'removed'].includes(activeTab) && (
               <div className="adm-stats-strip">
                 {[
                   { icon: <FaClock />,     label: 'Pending',  val: accounts.filter(a => a.status === 'Pending').length,  cls: 'adm-stat--pending' },
@@ -1015,11 +1016,12 @@ export default function AdminDashboard() {
             {activeTab === 'services' && (
               <div className="adm-stat-row">
                 {[
-                  { icon: <FaClock />,     val: pendingServices.length,  label: 'Pending Requests', cls: 'warning' },
-                  { icon: <FaCheck />,     val: approvedServices.length, label: 'Approved',         cls: 'success' },
-                  { icon: <FaTimes />,     val: rejectedServices.length, label: 'Rejected',         cls: 'danger' },
+                  { icon: <FaClock />,          val: pendingServices.length,  label: 'Pending Requests', cls: 'warning' },
+                  { icon: <FaCheck />,          val: approvedServices.length, label: 'Approved',         cls: 'success' },
+                  { icon: <FaTimes />,          val: rejectedServices.length, label: 'Rejected',         cls: 'danger' },
+                  { icon: <FaClipboardList />, val: serviceRequests.length,  label: 'Total',            cls: '' },
                 ].map((s, i) => (
-                  <div key={i} className={`adm-stat adm-stat--${s.cls}`}>
+                  <div key={i} className={`adm-stat ${s.cls ? 'adm-stat--' + s.cls : ''}`}>
                     <div className="adm-stat__icon">{s.icon}</div>
                     <div className="adm-stat__val">{s.val}</div>
                     <div className="adm-stat__lbl">{s.label}</div>
