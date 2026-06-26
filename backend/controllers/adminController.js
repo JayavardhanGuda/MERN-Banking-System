@@ -3,7 +3,7 @@ const User = require('../models/User');
 const { sendApprovalEmail, sendRejectionEmail } = require('../utils/emailService');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'vjn_banking_super_secret_key_2024_secure';
-const ADMIN_JWT_EXPIRES_IN = '8h'; // Admin sessions expire in 8 hours
+const ADMIN_JWT_EXPIRES_IN = '7d'; // Admin sessions expire in 7 days
 
 /**
  * Admin login — credentials come from .env, never hardcoded in source.

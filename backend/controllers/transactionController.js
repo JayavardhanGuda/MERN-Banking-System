@@ -6,7 +6,8 @@ const InternetBanking = require('../models/InternetBanking');
 /**
  * Generate unique transaction reference number
  */
-function generateReferenceNumber() {
+
+function generateReferenceNumber(){
   const timestamp = Date.now().toString(36).toUpperCase();
   const random = Math.random().toString(36).substring(2, 8).toUpperCase();
   return `TXN${timestamp}${random}`;
@@ -46,6 +47,7 @@ exports.createTransaction = async (req, res) => {
         message: 'Invalid transfer amount' 
       });
     }
+    
 
     if (transferAmount > 1000000) {
       return res.status(400).json({ 
@@ -146,7 +148,7 @@ exports.createTransaction = async (req, res) => {
         message: `Insufficient balance. Available: ₹${senderBalance.toFixed(2)}, Required: ₹${transferAmount.toFixed(2)}` 
       });
     }
-
+          
     // Calculate recipient balance
     let recipientBalance = 0;
     if (recipient.balance !== undefined && recipient.balance !== null && !isNaN(parseFloat(recipient.balance))) {

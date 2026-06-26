@@ -20,11 +20,8 @@ mongoose.connect(process.env.MONGODB_URI)
     console.warn('MongoDB connection warning (server will continue to run):', err.message);
   });
 
-// ── SECURITY MIDDLEWARE ────────────────────────────────────────────────────
-
-// 1. CORS must come FIRST — before helmet — so cross-origin requests
-//    from the frontend (localhost:5173) are allowed through
 app.use(cors());
+
 
 // 2. HELMET — sets secure HTTP headers
 //    crossOriginResourcePolicy set to false so it doesn't block
@@ -51,7 +48,7 @@ app.use('/api/', generalLimiter);
 //    Protects against: brute force password guessing and OTP guessing
 const strictLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 100,
   message: { success: false, message: 'Too many attempts. Please try again after 15 minutes.' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -68,6 +65,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 //    Protects against: MongoDB operator injection attacks like
 //    { "username": { "$gt": "" } } which bypass password checks
 //    Must come AFTER body-parser so req.body is already parsed
+
 app.use(mongoSanitize());
 
 // ─────────────────────────────────────────────────────────────────────────
